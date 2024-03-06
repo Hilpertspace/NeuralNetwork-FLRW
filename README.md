@@ -1,4 +1,4 @@
-# NeuralNetwork-FLRW
+# FLRW-Net
 A neural network approach for the FLRW universe in Euclidean Regge calculus
 
 
