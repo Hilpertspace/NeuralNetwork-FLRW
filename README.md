@@ -19,6 +19,8 @@ A neural network approach for the FLRW universe in Euclidean Regge calculus
 4 The project has been implemented using:
         -> Python 3.9
         -> Tensorflow 2.10.1, as well as the version of Keras coming with it (2.10.0)
+        -> Numpy 1.21.2
+        -> tqdm 4.62.2
         -> Jupyter Notebook 6.4.3
 
 
