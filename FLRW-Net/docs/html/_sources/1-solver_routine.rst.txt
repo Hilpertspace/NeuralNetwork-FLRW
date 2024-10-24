@@ -1,0 +1,7 @@
+Documentation of OneStep/solver_routine.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: OneStep.solver_routine
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+Header and user interface
+-------------------------
+.. toctree::
+   :maxdepth: 1
+
+   header
+   user_interface

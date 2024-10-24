@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Documentation of user_interface.py &#8212; FLRW-Net 2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=0f882399" />
+    <script src="_static/documentation_options.js?v=60dbed4a"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Documentation of header.py" href="header.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="header.html" title="Documentation of header.py"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="documentation.html">FLRW-Net 2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="0-other.html" accesskey="U">Header and user interface</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Documentation of user_interface.py</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-user_interface">
+<span id="documentation-of-user-interface-py"></span><h1>Documentation of user_interface.py<a class="headerlink" href="#module-user_interface" title="Link to this heading">¶</a></h1>
+<p>This module implements FLRW-Net’s UI.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.centering_window">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">centering_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#centering_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.centering_window" title="Link to this definition">¶</a></dt>
+<dd><p>Center a specified window on the screen.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.config_training_window">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">config_training_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_widget</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#config_training_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.config_training_window" title="Link to this definition">¶</a></dt>
+<dd><p>Set up the training window.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.create_boundary_menu">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">create_boundary_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">menubar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#create_boundary_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.create_boundary_menu" title="Link to this definition">¶</a></dt>
+<dd><p>Create a menu to choose the type of boundary data used: edge lengths or scale factors.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.create_help_menu">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">create_help_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">menubar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#create_help_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.create_help_menu" title="Link to this definition">¶</a></dt>
+<dd><p>Create a menu containing misc features that inform and help the user.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.create_threshold_menu">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">create_threshold_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">menubar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#create_threshold_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.create_threshold_menu" title="Link to this definition">¶</a></dt>
+<dd><p>Create a menu to allow the user to choose different thresholds for the loss.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.create_triangulation_menu">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">create_triangulation_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">menubar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#create_triangulation_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.create_triangulation_menu" title="Link to this definition">¶</a></dt>
+<dd><p>Create a menu to choose the triangulation of the spatial hypersurfaces.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.create_weights_menu">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">create_weights_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">menubar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#create_weights_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.create_weights_menu" title="Link to this definition">¶</a></dt>
+<dd><p>Create a menu to allow the user to choose custom/pre-trained weights,
+which the network uses initially as its trainable weights.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.default_weights_chosen">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">default_weights_chosen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#default_weights_chosen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.default_weights_chosen" title="Link to this definition">¶</a></dt>
+<dd><p>Default the trainable weights initially used by the network.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.git_message_box">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">git_message_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#git_message_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.git_message_box" title="Link to this definition">¶</a></dt>
+<dd><p>Show a message box containing the link the the Git project.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.load_weights">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">load_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#load_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.load_weights" title="Link to this definition">¶</a></dt>
+<dd><p>Load custom initial trainable weights for the network from a specified file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.load_weights_dialog">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">load_weights_dialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#load_weights_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.load_weights_dialog" title="Link to this definition">¶</a></dt>
+<dd><p>Set up load weights dialog window.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.loading">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">loading</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loading_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#loading"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.loading" title="Link to this definition">¶</a></dt>
+<dd><p>Simulate a loading at startup with a ttk progress bar.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.my_copyright">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">my_copyright</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#my_copyright"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.my_copyright" title="Link to this definition">¶</a></dt>
+<dd><p>Show the copyright statement.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.on_closing_root_window">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">on_closing_root_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#on_closing_root_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.on_closing_root_window" title="Link to this definition">¶</a></dt>
+<dd><p>Set closing dialog.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.open_documentation">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">open_documentation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#open_documentation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.open_documentation" title="Link to this definition">¶</a></dt>
+<dd><p>Open the documentation in the user’s default webbrowser.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.open_link">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">open_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#open_link"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.open_link" title="Link to this definition">¶</a></dt>
+<dd><p>Open the link in a web browser.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.purpose">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">purpose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#purpose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.purpose" title="Link to this definition">¶</a></dt>
+<dd><p>Show the purpose of FLRW-Net upon clicking on the according button.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.run_user_interface">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">run_user_interface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#run_user_interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.run_user_interface" title="Link to this definition">¶</a></dt>
+<dd><p>Specify the UI’s windows and features.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.save_graph">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">save_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">training_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#save_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.save_graph" title="Link to this definition">¶</a></dt>
+<dd><p>Save the graph containing the network’s training behaviour to a .png file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.save_graph_dialog">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">save_graph_dialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#save_graph_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.save_graph_dialog" title="Link to this definition">¶</a></dt>
+<dd><p>Show saving graph window upon clicking the according button in the training window.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.save_output">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">save_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">training_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#save_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.save_output" title="Link to this definition">¶</a></dt>
+<dd><p>Save the network’s output to a .json file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.save_output_dialog">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">save_output_dialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#save_output_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.save_output_dialog" title="Link to this definition">¶</a></dt>
+<dd><p>Show saving output window upon clicking the according button in the training window.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.save_weights">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">save_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">training_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#save_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.save_weights" title="Link to this definition">¶</a></dt>
+<dd><p>Save the trained weights of the network to a .json file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.save_weights_dialog">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">save_weights_dialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">np_trained_weights</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#save_weights_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.save_weights_dialog" title="Link to this definition">¶</a></dt>
+<dd><p>Show saving weights window upon clicking the according button in the training window.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.set_default_weights">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">set_default_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#set_default_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.set_default_weights" title="Link to this definition">¶</a></dt>
+<dd><p>Set the network’s initial trainable weights to their default value.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.set_threshold">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">set_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#set_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.set_threshold" title="Link to this definition">¶</a></dt>
+<dd><p>Set the value for the global loss threshold.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.startup_loading_window">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">startup_loading_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#startup_loading_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.startup_loading_window" title="Link to this definition">¶</a></dt>
+<dd><p>Set up the startup loading window.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.update_button_command">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">update_button_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">button</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_steps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#update_button_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.update_button_command" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="user_interface.update_flrw_config">
+<span class="sig-prename descclassname"><span class="pre">user_interface.</span></span><span class="sig-name descname"><span class="pre">update_flrw_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/user_interface.html#update_flrw_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#user_interface.update_flrw_config" title="Link to this definition">¶</a></dt>
+<dd><p>Update the label on the root window showing the current config of FLRW-Net.</p>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="documentation.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Documentation of user_interface.py</a><ul>
+<li><a class="reference internal" href="#user_interface.centering_window"><code class="docutils literal notranslate"><span class="pre">centering_window()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.config_training_window"><code class="docutils literal notranslate"><span class="pre">config_training_window()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.create_boundary_menu"><code class="docutils literal notranslate"><span class="pre">create_boundary_menu()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.create_help_menu"><code class="docutils literal notranslate"><span class="pre">create_help_menu()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.create_threshold_menu"><code class="docutils literal notranslate"><span class="pre">create_threshold_menu()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.create_triangulation_menu"><code class="docutils literal notranslate"><span class="pre">create_triangulation_menu()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.create_weights_menu"><code class="docutils literal notranslate"><span class="pre">create_weights_menu()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.default_weights_chosen"><code class="docutils literal notranslate"><span class="pre">default_weights_chosen()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.git_message_box"><code class="docutils literal notranslate"><span class="pre">git_message_box()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.load_weights"><code class="docutils literal notranslate"><span class="pre">load_weights()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.load_weights_dialog"><code class="docutils literal notranslate"><span class="pre">load_weights_dialog()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.loading"><code class="docutils literal notranslate"><span class="pre">loading()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.my_copyright"><code class="docutils literal notranslate"><span class="pre">my_copyright()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.on_closing_root_window"><code class="docutils literal notranslate"><span class="pre">on_closing_root_window()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.open_documentation"><code class="docutils literal notranslate"><span class="pre">open_documentation()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.open_link"><code class="docutils literal notranslate"><span class="pre">open_link()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.purpose"><code class="docutils literal notranslate"><span class="pre">purpose()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.run_user_interface"><code class="docutils literal notranslate"><span class="pre">run_user_interface()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.save_graph"><code class="docutils literal notranslate"><span class="pre">save_graph()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.save_graph_dialog"><code class="docutils literal notranslate"><span class="pre">save_graph_dialog()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.save_output"><code class="docutils literal notranslate"><span class="pre">save_output()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.save_output_dialog"><code class="docutils literal notranslate"><span class="pre">save_output_dialog()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.save_weights"><code class="docutils literal notranslate"><span class="pre">save_weights()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.save_weights_dialog"><code class="docutils literal notranslate"><span class="pre">save_weights_dialog()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.set_default_weights"><code class="docutils literal notranslate"><span class="pre">set_default_weights()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.set_threshold"><code class="docutils literal notranslate"><span class="pre">set_threshold()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.startup_loading_window"><code class="docutils literal notranslate"><span class="pre">startup_loading_window()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.update_button_command"><code class="docutils literal notranslate"><span class="pre">update_button_command()</span></code></a></li>
+<li><a class="reference internal" href="#user_interface.update_flrw_config"><code class="docutils literal notranslate"><span class="pre">update_flrw_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="header.html"
+                          title="previous chapter">Documentation of header.py</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/user_interface.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="header.html" title="Documentation of header.py"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="documentation.html">FLRW-Net 2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="0-other.html" >Header and user interface</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Documentation of user_interface.py</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2024, Florian Emanuel Hilpert.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

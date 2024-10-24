@@ -1,0 +1,7 @@
+Documentation of user_interface.py
+=========================================
+
+.. automodule:: user_interface
+   :members:
+   :undoc-members:
+   :show-inheritance:

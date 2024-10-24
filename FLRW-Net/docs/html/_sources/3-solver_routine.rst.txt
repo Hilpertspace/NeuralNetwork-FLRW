@@ -1,0 +1,7 @@
+Documentation of ThreeStep/solver_routine.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: ThreeStep.solver_routine
+   :members:
+   :undoc-members:
+   :show-inheritance:

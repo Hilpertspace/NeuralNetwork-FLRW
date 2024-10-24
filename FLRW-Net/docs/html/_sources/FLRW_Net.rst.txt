@@ -1,0 +1,7 @@
+Documentation of FLRW_Net.py
+=========================================
+
+.. automodule:: FLRW_Net
+   :members:
+   :undoc-members:
+   :show-inheritance:

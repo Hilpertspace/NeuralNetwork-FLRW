@@ -1,0 +1,7 @@
+Documentation of FourStep/layer.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: FourStep.layer
+   :members:
+   :undoc-members:
+   :show-inheritance:

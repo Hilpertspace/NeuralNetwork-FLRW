@@ -1,0 +1,7 @@
+Documentation of ThreeStep/neural_network.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: ThreeStep.neural_network
+   :members:
+   :undoc-members:
+   :show-inheritance:

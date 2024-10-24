@@ -1,0 +1,7 @@
+Documentation of FourStep/neural_network.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: FourStep.neural_network
+   :members:
+   :undoc-members:
+   :show-inheritance:

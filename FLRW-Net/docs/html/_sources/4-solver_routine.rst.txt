@@ -1,0 +1,7 @@
+Documentation of FourStep/solver_routine.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: FourStep.solver_routine
+   :members:
+   :undoc-members:
+   :show-inheritance:

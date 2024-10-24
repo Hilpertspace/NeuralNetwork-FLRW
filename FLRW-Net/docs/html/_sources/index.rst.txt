@@ -1,0 +1,26 @@
+.. FLRW-Net documentation master file, created by
+   sphinx-quickstart on Sat Jul 20 10:27:41 2024.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Documentation of FLRW-Net
+====================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   FLRW_Net
+   header
+   user_interface
+   0-one_timestep
+   0-two_timesteps
+   0-three_timesteps
+   0-four_timesteps
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

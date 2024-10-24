@@ -1,0 +1,7 @@
+Documentation of header.py
+=========================================
+
+.. automodule:: header
+   :members:
+   :undoc-members:
+   :show-inheritance:

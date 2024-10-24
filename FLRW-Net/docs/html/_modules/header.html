@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>header &#8212; FLRW-Net 2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css?v=0f882399" />
+    <script src="../_static/documentation_options.js?v=60dbed4a"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">FLRW-Net 2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">header</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for header</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This module stores general functions that fit in neither category.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+<span class="kn">from</span> <span class="nn">tkinter</span> <span class="kn">import</span> <span class="n">messagebox</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="redirect_output_to_widget">
+<a class="viewcode-back" href="../header.html#header.redirect_output_to_widget">[docs]</a>
+<span class="k">def</span> <span class="nf">redirect_output_to_widget</span><span class="p">(</span><span class="n">widget</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Switch the standard output to the scrolled text widget in the training window.</span>
+<span class="sd">    Standard output and error prompts are redirected.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">StdoutRedirector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Define the output redirector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="o">=</span> <span class="n">widget</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">linebuf</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            If the output is from a tqdm progress bar (&#39;\r&#39; at the end), the line should be</span>
+<span class="sd">            overwritten in the next iteration. This creates a progress bar in a single line</span>
+<span class="sd">            inside the scrolled text widget.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1">#sys.__stdout__.write(f&quot;DEBUG: Writing message: {repr(message)}&quot;)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;end-1c linestart&quot;</span><span class="p">,</span> <span class="s2">&quot;end-1c lineend&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">see</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Necessary to specify in this class (avoid too few public methods error). Not used.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1">#sys.__stdout__.write(&quot;DEBUG: flush() called&quot;)</span>
+            <span class="k">pass</span>
+
+    <span class="c1"># Redirect the standard ouput</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">StdoutRedirector</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+
+    <span class="c1"># Redirect the standard error (tqdm progress bar prints here)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">StdoutRedirector</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compute_spatial_edges">
+<a class="viewcode-back" href="../header.html#header.compute_spatial_edges">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_spatial_edges</span><span class="p">(</span><span class="n">sf</span><span class="p">,</span> <span class="n">n3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the spatial edge lengths if scale factors (sf) are prescribed as boundary data.&quot;&quot;&quot;</span>
+    <span class="n">edge_length</span> <span class="o">=</span> <span class="n">sf</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span><span class="mf">2.</span><span class="p">)</span> <span class="o">/</span> <span class="n">n3</span><span class="p">,</span> <span class="mf">1.</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">edge_length</span></div>
+
+
+<div class="viewcode-block" id="compute_lambda_limit">
+<a class="viewcode-back" href="../header.html#header.compute_lambda_limit">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_lambda_limit</span><span class="p">(</span><span class="n">nte</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute an upper boundary related to the maximum value of the cosmological constant for which</span>
+<span class="sd">    there is a solution given the prescribed boundary data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">nte</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="compute_value">
+<a class="viewcode-back" href="../header.html#header.compute_value">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_value</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n3</span><span class="p">,</span> <span class="n">lamb</span><span class="p">,</span> <span class="n">ini</span><span class="p">,</span> <span class="n">fin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute a value related to the cosmological constant to determine whether it lies above the</span>
+<span class="sd">    maximum value for which there is a solution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">lamb</span> <span class="o">*</span> <span class="p">(</span><span class="n">ini</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">fin</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">n3</span> <span class="o">/</span> <span class="n">n1</span></div>
+
+
+<div class="viewcode-block" id="set_triangulation_params">
+<a class="viewcode-back" href="../header.html#header.set_triangulation_params">[docs]</a>
+<span class="k">def</span> <span class="nf">set_triangulation_params</span><span class="p">(</span><span class="n">triangulation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the parameters that specify the spatial triangulations.&quot;&quot;&quot;</span>
+    <span class="n">warning</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">triangulation</span><span class="o">==</span><span class="s2">&quot;5-cell&quot;</span><span class="p">:</span>
+        <span class="n">n1</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">n2</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">n3</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">nte</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">elif</span> <span class="n">triangulation</span><span class="o">==</span><span class="s2">&quot;16-cell&quot;</span><span class="p">:</span>
+        <span class="n">n1</span> <span class="o">=</span> <span class="mi">24</span>
+        <span class="n">n2</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="n">n3</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="n">nte</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="k">elif</span> <span class="n">triangulation</span><span class="o">==</span><span class="s2">&quot;600-cell&quot;</span><span class="p">:</span>
+        <span class="n">n1</span> <span class="o">=</span> <span class="mi">720</span>
+        <span class="n">n2</span> <span class="o">=</span> <span class="mi">1200</span>
+        <span class="n">n3</span> <span class="o">=</span> <span class="mi">600</span>
+        <span class="n">nte</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n1</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">n2</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">n3</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">nte</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">warning</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">,</span> <span class="n">nte</span><span class="p">,</span> <span class="n">warning</span></div>
+
+
+<div class="viewcode-block" id="set_boundary_params">
+<a class="viewcode-back" href="../header.html#header.set_boundary_params">[docs]</a>
+<span class="k">def</span> <span class="nf">set_boundary_params</span><span class="p">(</span><span class="n">boundary</span><span class="p">,</span> <span class="n">entry2</span><span class="p">,</span> <span class="n">entry3</span><span class="p">,</span> <span class="n">n3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the parameters that specify the boundary data.&quot;&quot;&quot;</span>
+    <span class="n">warning</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">boundary</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">==</span><span class="s2">&quot;edge lengths&quot;</span><span class="p">:</span>
+        <span class="n">ini</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">entry2</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+        <span class="n">fin</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">entry3</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="n">boundary</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">==</span><span class="s2">&quot;scale factors&quot;</span><span class="p">:</span>
+        <span class="n">tmp_ini</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">entry2</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+        <span class="n">tmp_fin</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">entry3</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+        <span class="n">ini</span> <span class="o">=</span> <span class="n">compute_spatial_edges</span><span class="p">(</span><span class="n">tmp_ini</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
+        <span class="n">fin</span> <span class="o">=</span> <span class="n">compute_spatial_edges</span><span class="p">(</span><span class="n">tmp_fin</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ini</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">fin</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">warning</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">ini</span><span class="p">,</span> <span class="n">fin</span><span class="p">,</span> <span class="n">warning</span></div>
+
+
+<div class="viewcode-block" id="handle_warning_messages">
+<a class="viewcode-back" href="../header.html#header.handle_warning_messages">[docs]</a>
+<span class="k">def</span> <span class="nf">handle_warning_messages</span><span class="p">(</span><span class="n">triangulation_warning</span><span class="p">,</span> <span class="n">boundary_warning</span><span class="p">,</span> <span class="n">triangulation</span><span class="p">,</span> <span class="n">compute_button</span><span class="p">,</span>
+                            <span class="n">entry1</span><span class="p">,</span> <span class="n">entry4</span><span class="p">,</span> <span class="n">entry5</span><span class="p">,</span> <span class="n">entry6</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n3</span><span class="p">,</span> <span class="n">nte</span><span class="p">,</span> <span class="n">ini</span><span class="p">,</span> <span class="n">fin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of the warning messages for the different cases.&quot;&quot;&quot;</span>
+    <span class="n">lamb</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">epochs</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">lr</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">clipnorm</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">triangulation_warning</span> <span class="ow">and</span> <span class="n">boundary_warning</span><span class="p">:</span>
+        <span class="n">messagebox</span><span class="o">.</span><span class="n">showwarning</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="s2">&quot;Please choose a triangulation and the type of &quot;</span>
+                                <span class="s2">&quot;boundary data that you prescribe!&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">triangulation_warning</span><span class="p">:</span>
+        <span class="n">messagebox</span><span class="o">.</span><span class="n">showwarning</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="s2">&quot;Please choose a triangulation!&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">boundary_warning</span><span class="p">:</span>
+        <span class="n">messagebox</span><span class="o">.</span><span class="n">showwarning</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="s2">&quot;Please choose the type of boundary data that &quot;</span>
+                                <span class="s2">&quot;you prescribe!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lamb</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">entry1</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+        <span class="n">epochs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">entry4</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+        <span class="n">lr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">entry5</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+        <span class="n">clipnorm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">entry6</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">compute_value</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n3</span><span class="p">,</span> <span class="n">lamb</span><span class="p">,</span> <span class="n">ini</span><span class="p">,</span> <span class="n">fin</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">compute_lambda_limit</span><span class="p">(</span><span class="n">nte</span><span class="p">):</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showwarning</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="s2">&quot;There is no solution to these boundary data&quot;</span>
+                                    <span class="s2">&quot; for the prescribed value of the cosmological &quot;</span>
+                                    <span class="s2">&quot;constant!</span><span class="se">\n\n</span><span class="s2">Saved inputs anyway.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Saved input for the </span><span class="si">{</span><span class="n">triangulation</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="si">}</span><span class="s2"> model with:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;lambda=</span><span class="si">{</span><span class="n">lamb</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;ini=</span><span class="si">{</span><span class="n">ini</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;fin=</span><span class="si">{</span><span class="n">fin</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;epochs=</span><span class="si">{</span><span class="n">epochs</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;learning rate=</span><span class="si">{</span><span class="n">lr</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;clipnorm=</span><span class="si">{</span><span class="n">clipnorm</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Confirmation&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+        <span class="n">compute_button</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">lamb</span><span class="p">,</span> <span class="n">epochs</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">clipnorm</span></div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">FLRW-Net 2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">header</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2024, Florian Emanuel Hilpert.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>
