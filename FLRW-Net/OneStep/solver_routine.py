@@ -54,10 +54,7 @@ def on_closing_root_window_training(root_window, training_window, fig, finished_
 def one_step_solver(root_window, inputs, n1=10, n3=5, nte=3, lamb=0.1, epochs=5000, lr=1e-6,
                    adam_clipnorm=1., loss_accuracy=1e-26, weights=[[0.],[1.],[0.]]):
     """
-    Function that solves the one-step problem. The underlying idea is to train for a specified
-    number of epochs. During training the point of the minimum loss is stored. In a second step,
-    the training happens only up to the minimum loss to gain the correct weights.
-    Running the network with the given input and those weights then delivers the correct solution.
+    Final function that handles all the individual parts from closing events and calling the network to generating the output data.
     """
 
     # Set up the training window
