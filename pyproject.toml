@@ -1,0 +1,44 @@
+[project]
+name = "FLRW-Net"
+version = "0.1.0"
+description = "FLRW-Net is a neural network that solves the equations of motion in Euclidean Regge calculus."
+authors = [
+    {name = "Florian Emanuel Hilpert", email = "82518583+Hilpertspace@users.noreply.github.com"},
+]
+dependencies = [
+    "ruff>=0.14",
+    "ipynb>=0.1",
+    "ipykernel>=7.1",
+    "pytest>9.0",
+    "tensorflow==2.10.1",
+    "numpy==1.21.2",
+    "tqdm==4.62.2",
+    "jupyter-notebook==6.4.3"
+]
+
+requires-python = "==3.13.*"
+readme = "README.md"
+license = {text = "LICENSE"}
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+lint = "ruff check . --fix"
+format = "ruff format ."
+test = "pytest"
+
+[tool.ruff]
+lint.select = ["D", "F", "F841", "I", "Q", "W292", "ANN"]
+lint.ignore = ["D107", "D203", "D211", "D213"]
+line-length = 120
+exclude = [".venv"]
+
+# Per-file ignores (optional)
+[tool.ruff.lint.per-file-ignores]
+"FLRW-Net/tests/*" = ["D", "ANN"]
+
+[tool.pytest.ini_options]
+testpaths = [
+  "FLRW-Net/tests"
+]
