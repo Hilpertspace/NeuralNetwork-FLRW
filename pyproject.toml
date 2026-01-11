@@ -6,12 +6,22 @@ authors = [
     {name = "Florian Emanuel Hilpert", email = "82518583+Hilpertspace@users.noreply.github.com"},
 ]
 
-requires-python = ">=3.7,<=3.10"
+requires-python = ">=3.9,<3.11"
 
 dependencies = [
-    "tensorflow==2.10.1",
-    "numpy>=1.21,<1.24",
-    "tqdm>=4.62"
+    # Linux & Windows
+    "tensorflow==2.10.1; platform_system != 'Darwin'",
+
+    # macOS (Intel only)
+    "tensorflow-macos==2.10.0; platform_system == 'Darwin' and platform_machine == 'x86_64'",
+
+    # Apple Silicon
+    "tensorflow-macos==2.10.0; platform_system == 'Darwin' and platform_machine == 'arm64'",
+    "tensorflow-metal; platform_system == 'Darwin' and platform_machine == 'arm64'",
+
+    "numpy<2.0",
+    "tqdm==4.62.2",
+    "matplotlib<3.11,>=3.8"
 ]
 
 [project.optional-dependencies]
@@ -28,6 +38,7 @@ distribution = false
 lint = "ruff check . --fix"
 format = "ruff format ."
 test = "pytest"
+start-flrw-net "python FLRW-Net/src/FLRW_Net.py"
 
 [tool.ruff]
 lint.select = ["D", "F", "F841", "I", "Q", "W292", "ANN"]

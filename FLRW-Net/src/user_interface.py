@@ -43,6 +43,8 @@ UPDATED_CONFIG = False
 CHANGED_STEPS = False
 LOSS_THRESHOLD = 1e-26
 
+ICON = "FLRW-Net/src/Icon.ico"
+
 def centering_window(window, width, height):
     """Center a specified window on the screen."""
     # Get the screen width and height
@@ -84,7 +86,7 @@ def git_message_box(root):
     message_box.resizable(False, False)
 
     # Set the icon for the application
-    message_box.iconbitmap("Icon.ico")
+    message_box.iconbitmap(ICON)
 
     # Set the size of the window
     window_width = 350
@@ -167,7 +169,7 @@ def save_weights_dialog(window, np_trained_weights):
     dialog.title("Save weights")
     dialog.config(bg="white")
     dialog.lift()
-    dialog.iconbitmap("Icon.ico")
+    dialog.iconbitmap(ICON)
     dialog.resizable(False, False)
 
     centering_window(dialog, 300, 150)
@@ -239,7 +241,7 @@ def save_output_dialog(window, output):
     dialog.title("Save output")
     dialog.config(bg="white")
     dialog.lift()
-    dialog.iconbitmap("Icon.ico")
+    dialog.iconbitmap(ICON)
     dialog.resizable(False, False)
 
     centering_window(dialog, 300, 150)
@@ -299,7 +301,7 @@ def save_graph_dialog(window, fig):
     dialog.title("Save graph")
     dialog.config(bg="white")
     dialog.lift()
-    dialog.iconbitmap("Icon.ico")
+    dialog.iconbitmap(ICON)
     dialog.resizable(False, False)
 
     centering_window(dialog, 300, 150)
@@ -371,7 +373,7 @@ def load_weights_dialog(window, value):
     dialog.title("Load weights")
     dialog.config(bg="white")
     dialog.lift()
-    dialog.iconbitmap("Icon.ico")
+    dialog.iconbitmap(ICON)
     dialog.resizable(False, False)
 
     centering_window(dialog, 300, 150)
@@ -414,7 +416,7 @@ def config_training_window(window, output_widget):
     window.lift()
     window.config(bg="white")
     window.resizable(False, False)
-    window.iconbitmap("Icon.ico")
+    window.iconbitmap(ICON)
 
     # Center the training window on the screen
     centering_window(window, width=630, height=750)
@@ -467,7 +469,7 @@ def startup_loading_window(root_window):
     load_window.resizable(False, False)
 
     # Set the icon for the application
-    load_window.iconbitmap("Icon.ico")
+    load_window.iconbitmap(ICON)
 
     # Call the centering_window function to center the window
     centering_window(load_window, width=400, height=80)
@@ -719,7 +721,7 @@ def run_user_interface():
     root.title("FLRW-Net")
     root.lift()
     root.config(bg="white", menu=menubar)
-    root.iconbitmap("Icon.ico")
+    root.iconbitmap(ICON)
     root.resizable(False, False)
 
     # Center the root window on the screen

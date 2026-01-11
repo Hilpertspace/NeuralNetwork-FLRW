@@ -15,7 +15,7 @@ check_python_version() {
 PYTHON_CMD=""
 
 # List of possible python commands
-CANDIDATES=("python3.10" "python3" "python")
+CANDIDATES=("python" "python3" "python3.10")
 
 for cmd in "${CANDIDATES[@]}"; do
     PYTHON_FOUND=$(check_python_version "$cmd" || true)

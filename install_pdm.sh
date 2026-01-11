@@ -8,5 +8,3 @@ python -m pip install --upgrade pdm
 
 echo "Configure pdm to use the found installation of python3.10"
 pdm use -f "$PYTHON_CMD"
-
-pdm info
