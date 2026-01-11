@@ -5,18 +5,19 @@ description = "FLRW-Net is a neural network that solves the equations of motion 
 authors = [
     {name = "Florian Emanuel Hilpert", email = "82518583+Hilpertspace@users.noreply.github.com"},
 ]
+
+requires-python = ">=3.7,<=3.10"
+
 dependencies = [
-    "ruff>=0.14",
-    "ipynb>=0.1",
-    "ipykernel>=7.1",
-    "pytest>9.0",
     "tensorflow==2.10.1",
-    "numpy==1.21.2",
-    "tqdm==4.62.2",
-    "jupyter-notebook==6.4.3"
+    "numpy>=1.21,<1.24",
+    "tqdm>=4.62"
 ]
 
-requires-python = "==3.13.*"
+[project.optional-dependencies]
+dev = ["ruff>=0.1.0", "pytest>=7.0"]
+notebooks = ["ipykernel>=6.0", "notebook>=6.4"]
+
 readme = "README.md"
 license = {text = "LICENSE"}
 

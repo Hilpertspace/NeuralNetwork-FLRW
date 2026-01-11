@@ -31,3 +31,7 @@ The neural network is capable of solving the Euclidean Regge equations of motion
         -> to decrease the clipnorm
         -> to switch to the other solver
 before altering more advanced settings, which can be found in the documentation of the respective functions.
+
+https://www.python.org/downloads/windows/
+Install python 3.10.10
+Opt 'Add python.exe' to PATH in the install wizard
