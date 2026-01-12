@@ -1,3 +1,5 @@
 *.pyc
 .pdm-python
+.python-version
 pdm.lock
+.venv
