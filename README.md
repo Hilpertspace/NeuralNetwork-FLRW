@@ -6,7 +6,7 @@ A neural network approach for the FLRW universe in Euclidean Regge calculus
 To set up FLRW-Net on your local device, do the following:
 1. Clone the repository from GitHub.
 1. Go to the project root 'NEURALNETWORK-FLRW' in your preferred editor.
-1. Run `./setup_flrw_net.sh` from project root
+1. Run `./bin/setup_flrw_net.sh` from project root
 1. Congrats. Now you can start FLRW-Net from project root with: `pdm start-flrw-net`
 
 ## Note
