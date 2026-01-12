@@ -4,6 +4,7 @@ A neural network approach for the FLRW universe in Euclidean Regge calculus
 
 ## Get started
 To set up FLRW-Net on your local device, do the following:
+1. Install Python 3.10.10 on your local device. Please add the executable to your systems environment variables: either in the install wizard or manually after the installation.
 1. Clone the repository from GitHub.
 1. Go to the project root 'NEURALNETWORK-FLRW' in your preferred editor.
 1. Run `./bin/setup_flrw_net.sh` from project root
