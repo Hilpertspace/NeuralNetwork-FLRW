@@ -38,7 +38,7 @@ distribution = false
 lint = "ruff check . --fix"
 format = "ruff format ."
 test = "pytest"
-start-flrw-net "python FLRW-Net/src/FLRW_Net.py"
+start-flrw-net = "python FLRW-Net/src/FLRW_Net.py"
 
 [tool.ruff]
 lint.select = ["D", "F", "F841", "I", "Q", "W292", "ANN"]

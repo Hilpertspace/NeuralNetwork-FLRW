@@ -5,9 +5,9 @@ INSTALL_NOTEBOOKS="${2-false}"
 
 echo "Install basic dependencies for FLRW-Net."
 rm -f pdm.lock
-pdm lock --platform linux --append
-pdm lock --platform windows --append
-pdm lock --platform macos --append
+pdm lock -G dev,notebooks --platform linux --append
+pdm lock -G dev,notebooks --platform windows --append
+pdm lock -G dev,notebooks --platform macos --append
 pdm install
 
 if [ "$INSTALL_DEV_SUITE" = true ]; then
