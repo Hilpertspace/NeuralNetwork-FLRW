@@ -9,15 +9,14 @@ from tqdm import tqdm
 
 from OneStep.layer import HiddenLayer
 
+
 class Network(tf.keras.Model):
-    """
-    Definition of FLRW-Net.
+    """Definition of FLRW-Net.
     The network takes the boundary edges and solves the EOMm for the struts, which it returns.
     """
 
-    def __init__(self,training_window,n1=10,n3=5,nte=3,lamb=1e-2,loss_threshold=1e-26,**kwargs):
-        """
-        Initialize the neural network.
+    def __init__(self, training_window, n1=10, n3=5, nte=3, lamb=1e-2, loss_threshold=1e-26, **kwargs):
+        """Initialize the neural network.
 
         UI params:
         window: training_window, flag: abort_training, button: button_abort
@@ -39,8 +38,7 @@ class Network(tf.keras.Model):
         self.initialize_params(n1, n3, nte, lamb, loss_threshold, training_window)
 
         # Initialize abortion button
-        button_abort = tk.Button(training_window, text="Abort", background="lightgray",
-                                 command=self.abort)
+        button_abort = tk.Button(training_window, text="Abort", background="lightgray", command=self.abort)
         button_abort.grid(row=1, column=0, columnspan=1, padx=5, pady=5)
         button_abort.config(state="normal")
 
@@ -51,8 +49,8 @@ class Network(tf.keras.Model):
         """Initialize training constants."""
         # Define global constants for the model in 'float64' format
         self.pi = tf.constant(np.pi, dtype=tf.float64)
-        self.one = tf.constant(1., dtype=tf.float64)
-        self.minus_one = tf.constant(-1., dtype=tf.float64)
+        self.one = tf.constant(1.0, dtype=tf.float64)
+        self.minus_one = tf.constant(-1.0, dtype=tf.float64)
 
         # Define Regge calculus parameters
         self.n1 = tf.constant(n1, dtype=tf.float64)
@@ -75,8 +73,7 @@ class Network(tf.keras.Model):
         return self.hidden(inputs)
 
     def crop(self, arg):
-        """
-        Set the argument range of 'tf.acos' to [-1., 1.] since numeric computations could
+        """Set the argument range of 'tf.acos' to [-1., 1.] since numeric computations could
         lead to values that are slightly outside this range due to computational error.
         """
         # Define the conditions
@@ -98,24 +95,30 @@ class Network(tf.keras.Model):
         return self.min_weights
 
     def custom_compute_loss(self, prediction):
-        """
-        Compute the network's loss by evaluating the EOMm term, which should be 0 in the
+        """Compute the network's loss by evaluating the EOMm term, which should be 0 in the
         presence of a classical solution. Thus, its value represents a natural choice for the loss.
         """
         # Define the parts of the output in Regge calculus variables
-        l1 = prediction[0,0]
-        m1 = prediction[0,1]
-        l2 = prediction[0,2]
+        l1 = prediction[0, 0]
+        m1 = prediction[0, 1]
+        l2 = prediction[0, 2]
 
         # Compute the value of the EOMm: the first fraction
-        numerator1 = -(l1 + l2) * (tf.math.square(l1) + tf.math.square(l2)) * self.lamb*m1*self.n3
-        denominator1 = tf.constant(12,dtype=tf.float64) * tf.math.sqrt(tf.constant(-3,dtype=tf.float64) * tf.math.square(l1 - l2) + tf.constant(8,dtype=tf.float64) * tf.math.square(m1))
+        numerator1 = -(l1 + l2) * (tf.math.square(l1) + tf.math.square(l2)) * self.lamb * m1 * self.n3
+        denominator1 = tf.constant(12, dtype=tf.float64) * tf.math.sqrt(
+            tf.constant(-3, dtype=tf.float64) * tf.math.square(l1 - l2) + tf.constant(8, dtype=tf.float64) * tf.math.square(m1)
+        )
 
         # Compute the value of the EOMm: the second fraction
         # 'self.crop' ensures the arguments of the arccos to be indeed in [-1, 1]
-        arg = self.crop( (tf.math.square(l1 - l2) - tf.constant(2,dtype=tf.float64) * tf.math.square(m1)) / (tf.constant(2,dtype=tf.float64) * tf.math.square(l1 - l2) - tf.constant(6,dtype=tf.float64) * tf.math.square(m1)) )
-        numerator2 = (l1 + l2) * m1 * self.n1 * (tf.constant(2,dtype=tf.float64) * self.pi - self.nte * tf.math.acos(arg) )
-        denominator2 = tf.math.sqrt(-tf.constant(1,dtype=tf.float64)*tf.math.square(l1-l2)+tf.constant(4,dtype=tf.float64)*tf.math.square(m1))
+        arg = self.crop(
+            (tf.math.square(l1 - l2) - tf.constant(2, dtype=tf.float64) * tf.math.square(m1))
+            / (tf.constant(2, dtype=tf.float64) * tf.math.square(l1 - l2) - tf.constant(6, dtype=tf.float64) * tf.math.square(m1))
+        )
+        numerator2 = (l1 + l2) * m1 * self.n1 * (tf.constant(2, dtype=tf.float64) * self.pi - self.nte * tf.math.acos(arg))
+        denominator2 = tf.math.sqrt(
+            -tf.constant(1, dtype=tf.float64) * tf.math.square(l1 - l2) + tf.constant(4, dtype=tf.float64) * tf.math.square(m1)
+        )
 
         # Define the total loss as: EOMm ^ 2. This ensures that the solution of the time step
         # can be found as a minimizing procedure, since loss = 0 <--> EOMm = 0 i.e.,
@@ -129,8 +132,7 @@ class Network(tf.keras.Model):
         self.abort_training = True
 
     def training(self, inputs, epochs):
-        """
-        Training logic of the neural network. The train_step function is called iteratively until
+        """Training logic of the neural network. The train_step function is called iteratively until
         the specified number of epochs is reached.
         """
         # Convert inputs to dtype=tf.float64
@@ -139,16 +141,15 @@ class Network(tf.keras.Model):
         loss_array = []
 
         # Create the progress bar
-        training_progress = ttk.Progressbar(self.training_window, orient=tk.HORIZONTAL, length=300,
-                                            mode='determinate')
+        training_progress = ttk.Progressbar(self.training_window, orient=tk.HORIZONTAL, length=300, mode="determinate")
 
-        for i in tqdm(range(epochs), desc='Progress', unit='step', ncols=69):
+        for i in tqdm(range(epochs), desc="Progress", unit="step", ncols=69):
             if self.abort_training:
                 print("\rTraining aborted.")
                 return None, None
 
             # Update the progress bar
-            training_progress['value'] = i
+            training_progress["value"] = i
             training_progress.update()
             training_progress.update_idletasks()
 
@@ -166,16 +167,14 @@ class Network(tf.keras.Model):
 
             # If the latest loss is smaller that the minimum threshold, abort training
             if loss_array[-1] < self.loss_threshold:
-                print(f"\r--- Loss below specified threshold of {self.loss_threshold}.",
-                         " Training completed. ---\n")
+                print(f"\r--- Loss below specified threshold of {self.loss_threshold}.", " Training completed. ---\n")
                 return minimum_loss, loss_array
 
         return minimum_loss, loss_array
 
     @tf.function
     def custom_train_step(self, inputs):
-        """
-        Define a single step of training.
+        """Define a single step of training.
         '@tf.function' speeds up training incredibly: --- DO NOT REMOVE! ---
         """
         # Use the automatic gradient computation

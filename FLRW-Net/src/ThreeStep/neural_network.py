@@ -9,15 +9,14 @@ from tqdm import tqdm
 
 from ThreeStep.layer import HiddenLayer
 
+
 class Network(tf.keras.Model):
-    """
-    Definition of FLRW-Net.
+    """Definition of FLRW-Net.
     The network takes the boundary edges and solves the EOMm for the struts, which it returns.
     """
 
-    def __init__(self, training_window, n1=10, n2=10, n3=5, nte=3, lamb=1e-2, loss_threshold=1e-26,**kwargs):
-        """
-        Initialize the neural network.
+    def __init__(self, training_window, n1=10, n2=10, n3=5, nte=3, lamb=1e-2, loss_threshold=1e-26, **kwargs):
+        """Initialize the neural network.
 
         UI params:
         window: training_window, flag: abort_training, button: button_abort
@@ -39,8 +38,7 @@ class Network(tf.keras.Model):
         self.initialize_params(n1, n2, n3, nte, lamb, loss_threshold, training_window)
 
         # Initialize abortion button
-        button_abort = tk.Button(training_window, text="Abort", background="lightgray",
-                                 command=self.abort)
+        button_abort = tk.Button(training_window, text="Abort", background="lightgray", command=self.abort)
         button_abort.grid(row=1, column=0, columnspan=1, padx=5, pady=5)
         button_abort.config(state="normal")
 
@@ -51,8 +49,8 @@ class Network(tf.keras.Model):
         """Initialize the parameters of the triangulation as well as those for training."""
         # Define global constants for the model in 'float64' format
         self.pi = tf.constant(np.pi, dtype=tf.float64)
-        self.one = tf.constant(1., dtype=tf.float64)
-        self.minus_one = tf.constant(-1., dtype=tf.float64)
+        self.one = tf.constant(1.0, dtype=tf.float64)
+        self.minus_one = tf.constant(-1.0, dtype=tf.float64)
 
         # Define Regge calculus parameters
         self.n1 = tf.constant(n1, dtype=tf.float64)
@@ -91,8 +89,7 @@ class Network(tf.keras.Model):
         return self.hidden(inputs)
 
     def crop(self, arg):
-        """
-        Set the argument range of 'tf.acos' to [-1., 1.] since numeric computations could
+        """Set the argument range of 'tf.acos' to [-1., 1.] since numeric computations could
         lead to values that are slightly outside this range due to computational error.
         """
         # Define the conditions
@@ -111,30 +108,36 @@ class Network(tf.keras.Model):
     def get_min_weights(self):
         """Output the trainable weights of the hidden layer that produced the minimum loss."""
         return self.min_weights_2, self.min_weights_3, self.min_weights_4, self.min_weights_5, self.min_weights_6
-    
+
     def print_weights(self):
         """Output the trainable weights."""
         tf.print(self.hidden.trainable_weights)
 
     def EOM_struts(self, prediction):
-        """
-        Compute the network's loss by evaluating the EOMm term, which should be 0 in the
+        """Compute the network's loss by evaluating the EOMm term, which should be 0 in the
         presence of a classical solution. Thus, its value represents a natural choice for the loss.
         """
         # Define the parts of the output in Regge calculus variables
-        l1 = prediction[0,0]
-        m1 = prediction[0,1]
-        l2 = prediction[0,2]
+        l1 = prediction[0, 0]
+        m1 = prediction[0, 1]
+        l2 = prediction[0, 2]
 
         # Compute the value of the EOMm: the first fraction
-        numerator1 = -(l1 + l2) * (tf.math.square(l1) + tf.math.square(l2)) * self.lamb*m1*self.n3
-        denominator1 = tf.constant(12,dtype=tf.float64) * tf.math.sqrt(tf.constant(-3,dtype=tf.float64) * tf.math.square(l1 - l2) + tf.constant(8,dtype=tf.float64) * tf.math.square(m1))
+        numerator1 = -(l1 + l2) * (tf.math.square(l1) + tf.math.square(l2)) * self.lamb * m1 * self.n3
+        denominator1 = tf.constant(12, dtype=tf.float64) * tf.math.sqrt(
+            tf.constant(-3, dtype=tf.float64) * tf.math.square(l1 - l2) + tf.constant(8, dtype=tf.float64) * tf.math.square(m1)
+        )
 
         # Compute the value of the EOMm: the second fraction
         # 'self.crop' ensures the arguments of the arccos to be indeed in [-1, 1]
-        arg = self.crop( (tf.math.square(l1 - l2) - tf.constant(2,dtype=tf.float64) * tf.math.square(m1)) / (tf.constant(2,dtype=tf.float64) * tf.math.square(l1 - l2) - tf.constant(6,dtype=tf.float64) * tf.math.square(m1)) )
-        numerator2 = (l1 + l2) * m1 * self.n1 * (tf.constant(2,dtype=tf.float64) * self.pi - self.nte * tf.math.acos(arg) )
-        denominator2 = tf.math.sqrt(-tf.constant(1,dtype=tf.float64)*tf.math.square(l1-l2)+tf.constant(4,dtype=tf.float64)*tf.math.square(m1))
+        arg = self.crop(
+            (tf.math.square(l1 - l2) - tf.constant(2, dtype=tf.float64) * tf.math.square(m1))
+            / (tf.constant(2, dtype=tf.float64) * tf.math.square(l1 - l2) - tf.constant(6, dtype=tf.float64) * tf.math.square(m1))
+        )
+        numerator2 = (l1 + l2) * m1 * self.n1 * (tf.constant(2, dtype=tf.float64) * self.pi - self.nte * tf.math.acos(arg))
+        denominator2 = tf.math.sqrt(
+            -tf.constant(1, dtype=tf.float64) * tf.math.square(l1 - l2) + tf.constant(4, dtype=tf.float64) * tf.math.square(m1)
+        )
 
         # Define the total loss as: EOMm ^ 2. This ensures that the solution of the time step
         # can be found as a minimizing procedure, since loss = 0 <--> EOMm = 0 i.e.,
@@ -142,54 +145,82 @@ class Network(tf.keras.Model):
         loss = tf.math.square(numerator1 / denominator1 + numerator2 / denominator2)
 
         return loss
-    
+
     def arg1(self, inputs):
         """Argument of dihedral angle 1"""
-        l1 = inputs[0,0]
-        m1 = inputs[0,1]
-        l2 = inputs[0,2]
-        return self.crop( (tf.math.square(l1 - l2) - tf.constant(2,dtype=tf.float64) * tf.math.square(m1)) / (tf.constant(2,dtype=tf.float64) * tf.math.square(l1 - l2) - tf.constant(6,dtype=tf.float64) * tf.math.square(m1)) )
-        
+        l1 = inputs[0, 0]
+        m1 = inputs[0, 1]
+        l2 = inputs[0, 2]
+        return self.crop(
+            (tf.math.square(l1 - l2) - tf.constant(2, dtype=tf.float64) * tf.math.square(m1))
+            / (tf.constant(2, dtype=tf.float64) * tf.math.square(l1 - l2) - tf.constant(6, dtype=tf.float64) * tf.math.square(m1))
+        )
+
     def arg2(self, inputs):
         """Argument of dihedral angle 2"""
-        l1 = inputs[0,0]
-        m1 = inputs[0,1]
-        l2 = inputs[0,2]
-        return self.crop( (-l1 + l2) / (tf.constant(2.,dtype=tf.float64) * tf.math.sqrt(tf.constant(-2.,dtype=tf.float64)*tf.math.square(l1 - l2) + tf.constant(6.,dtype=tf.float64) * tf.math.square(m1))) )
-    
+        l1 = inputs[0, 0]
+        m1 = inputs[0, 1]
+        l2 = inputs[0, 2]
+        return self.crop(
+            (-l1 + l2)
+            / (
+                tf.constant(2.0, dtype=tf.float64)
+                * tf.math.sqrt(
+                    tf.constant(-2.0, dtype=tf.float64) * tf.math.square(l1 - l2) + tf.constant(6.0, dtype=tf.float64) * tf.math.square(m1)
+                )
+            )
+        )
+
     def EOMl1(self, inputs):
         """Part of the equation of motion of the spatial edge that has the number of tetrahedra n3 as a prefactor."""
-        l1 = inputs[0,0]
-        m1 = inputs[0,1]
-        l2 = inputs[0,2]
-        output = 1/24 * self.n3 * self.lamb * (3 * tf.math.pow(l2,3) * (-l1+l2) - 2*(tf.math.square(l1+l2) + 2*tf.math.square(l2))*tf.math.square(m1)) / tf.math.sqrt(-3 * tf.math.square(l1-l2) + 8 * tf.math.square(m1))
+        l1 = inputs[0, 0]
+        m1 = inputs[0, 1]
+        l2 = inputs[0, 2]
+        output = (
+            1
+            / 24
+            * self.n3
+            * self.lamb
+            * (3 * tf.math.pow(l2, 3) * (-l1 + l2) - 2 * (tf.math.square(l1 + l2) + 2 * tf.math.square(l2)) * tf.math.square(m1))
+            / tf.math.sqrt(-3 * tf.math.square(l1 - l2) + 8 * tf.math.square(m1))
+        )
         return output
-    
+
     def EOMl_acoses(self, inputs):
         """Part of the equation of motion of the spatial edge that has the number of triangles n2 as a prefactor."""
-        l2 = inputs[0,2]
-        tmp1 = self.crop(self.arg2(inputs[:,:3]))
-        tmp2 = self.crop(self.arg2(tf.reverse(inputs[:,2:],axis=[1])))
-        output = tf.math.sqrt(tf.constant(3.,dtype=tf.float64))*l2*self.n2*(self.pi-tf.math.acos(tmp1)-tf.math.acos(tmp2))
+        l2 = inputs[0, 2]
+        tmp1 = self.crop(self.arg2(inputs[:, :3]))
+        tmp2 = self.crop(self.arg2(tf.reverse(inputs[:, 2:], axis=[1])))
+        output = tf.math.sqrt(tf.constant(3.0, dtype=tf.float64)) * l2 * self.n2 * (self.pi - tf.math.acos(tmp1) - tf.math.acos(tmp2))
         return output
-    
+
     def EOMl2(self, inputs):
         """Part of the equation of motion of the spatial edge that has the number of edges n1 as a prefactor."""
-        l1 = inputs[0,0]
-        m1 = inputs[0,1]
-        l2 = inputs[0,2]
-        m2 = inputs[0,3]
-        l3 = inputs[0,4]
-        output = self.n1 * (2 * self.pi - self.nte * tf.math.acos(self.crop(self.arg1(inputs[:,:3])))) * tf.math.sqrt(-tf.math.square(l2-l3)+4*tf.math.square(m2)) * (-2*tf.math.square(m1)-l1*l2+tf.math.square(l2))/(2*tf.math.sqrt(-tf.math.square(l1-l2)+4*tf.math.square(m1)) * tf.math.sqrt(-tf.math.square(l2-l3)+4*tf.math.square(m2)) )
+        l1 = inputs[0, 0]
+        m1 = inputs[0, 1]
+        l2 = inputs[0, 2]
+        m2 = inputs[0, 3]
+        l3 = inputs[0, 4]
+        output = (
+            self.n1
+            * (2 * self.pi - self.nte * tf.math.acos(self.crop(self.arg1(inputs[:, :3]))))
+            * tf.math.sqrt(-tf.math.square(l2 - l3) + 4 * tf.math.square(m2))
+            * (-2 * tf.math.square(m1) - l1 * l2 + tf.math.square(l2))
+            / (
+                2
+                * tf.math.sqrt(-tf.math.square(l1 - l2) + 4 * tf.math.square(m1))
+                * tf.math.sqrt(-tf.math.square(l2 - l3) + 4 * tf.math.square(m2))
+            )
+        )
         return output
-    
+
     def EOM_edges(self, inputs):
         """Final EOMl term ^ 2"""
-        term1 = self.EOMl1(inputs[:,:3])
-        term2 = self.EOMl1(tf.reverse(inputs[:,2:],axis=[1]))
+        term1 = self.EOMl1(inputs[:, :3])
+        term2 = self.EOMl1(tf.reverse(inputs[:, 2:], axis=[1]))
         term3 = self.EOMl_acoses(inputs)
         term4 = self.EOMl2(inputs)
-        term5 = self.EOMl2(tf.reverse(inputs,axis=[1]))
+        term5 = self.EOMl2(tf.reverse(inputs, axis=[1]))
         return tf.math.square(term1 + term2 + term3 - term4 - term5)
 
     def abort(self):
@@ -197,8 +228,7 @@ class Network(tf.keras.Model):
         self.abort_training = True
 
     def training(self, inputs, epochs):
-        """
-        Training logic of the neural network. The train_step function is called iteratively until
+        """Training logic of the neural network. The train_step function is called iteratively until
         the specified number of epochs is reached.
         """
         # Convert inputs to dtype=tf.float64
@@ -211,16 +241,15 @@ class Network(tf.keras.Model):
         self.minimum_loss = None
 
         # Create the progress bar
-        training_progress = ttk.Progressbar(self.training_window, orient=tk.HORIZONTAL, length=300,
-                                            mode='determinate')
+        training_progress = ttk.Progressbar(self.training_window, orient=tk.HORIZONTAL, length=300, mode="determinate")
 
-        for i in tqdm(range(epochs), desc='Progress', unit='step', ncols=69):
+        for i in tqdm(range(epochs), desc="Progress", unit="step", ncols=69):
             if self.abort_training:
                 print("\rTraining aborted.")
                 return None, None
 
             # Update the progress bar
-            training_progress['value'] = i
+            training_progress["value"] = i
             training_progress.update()
             training_progress.update_idletasks()
 
@@ -253,8 +282,7 @@ class Network(tf.keras.Model):
 
     @tf.function
     def custom_train_step(self, inputs):
-        """
-        Define a single step of training.
+        """Define a single step of training.
         '@tf.function' speeds up training incredibly: --- DO NOT REMOVE! ---
         """
         # Use the automatic gradient computation
@@ -262,13 +290,13 @@ class Network(tf.keras.Model):
             # Perform 1 forward-feed step
             prediction = self(inputs, training=True)  # Forward pass
 
-            loss_strut_1 = self.EOM_struts(prediction[:,0:3])
-            loss_strut_2 = self.EOM_struts(prediction[:,2:5])
-            loss_strut_3 = self.EOM_struts(prediction[:,4:7])
+            loss_strut_1 = self.EOM_struts(prediction[:, 0:3])
+            loss_strut_2 = self.EOM_struts(prediction[:, 2:5])
+            loss_strut_3 = self.EOM_struts(prediction[:, 4:7])
             loss_edge_1 = self.EOM_edges(prediction[:, 0:5])
             loss_edge_2 = self.EOM_edges(prediction[:, 2:7])
 
-            loss = (loss_strut_1 + loss_strut_2 + loss_strut_3 + loss_edge_1 + loss_edge_2) / tf.constant(5,dtype=tf.float64)
+            loss = (loss_strut_1 + loss_strut_2 + loss_strut_3 + loss_edge_1 + loss_edge_2) / tf.constant(5, dtype=tf.float64)
 
         # Tell tensorflows automatic gradient computation to compute the gradients
         # of the loss with respect to the trainable variables of the network:

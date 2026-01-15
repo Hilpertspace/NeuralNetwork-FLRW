@@ -2,25 +2,27 @@
 
 import tensorflow as tf
 
+
 class HiddenLayer(tf.keras.layers.Layer):
-    """
-    Hidden layer of the neural network.
+    """Hidden layer of the neural network.
 
     Inputs:
     The two boundary edges and a parameter related to the strut: edge1, strut_param, edge2
 
     Returns:
     The solution for the struts given the boundary data: edge1, strut, edge2
+
     """
 
     def __init__(self):
-        """
-        Initialize the hidden layer.
+        """Initialize the hidden layer.
 
-        Parameters:
+        Parameters
+        ----------
         Three trainable weights in weights_2 connecting the value of the strut to the neighbouring
         edges and strut_param. Five non-trainable parameters corresponding to the weights for the
         boundary edges and to three biases.
+
         """
         super().__init__()
 
@@ -71,45 +73,44 @@ class HiddenLayer(tf.keras.layers.Layer):
 
     def strut_activation(self, element_1, element_2, element_3):
         """Define an activation function for the strut-neurons."""
-        output = tf.math.sqrt(element_2 + tf.constant(3/8,dtype=tf.float64))
+        output = tf.math.sqrt(element_2 + tf.constant(3 / 8, dtype=tf.float64))
         output *= tf.math.abs(element_1 - element_3)
 
         return output
-    
+
     def spatial_edge_activation(self, l1, m1, l2, m2, l3):
         """Define an activation function for the spatial-edge neurons."""
-        part_1 = l1 + (l3-l1) * tf.constant(3/8,dtype=tf.float64) * tf.math.square(l1-l2) / tf.math.square(m1)
-        part_2 = l1 + (l3-l1) * tf.constant(3/8,dtype=tf.float64) * tf.math.square(l2-l3) / tf.math.square(m2)
+        part_1 = l1 + (l3 - l1) * tf.constant(3 / 8, dtype=tf.float64) * tf.math.square(l1 - l2) / tf.math.square(m1)
+        part_2 = l1 + (l3 - l1) * tf.constant(3 / 8, dtype=tf.float64) * tf.math.square(l2 - l3) / tf.math.square(m2)
         output = (part_1 + part_2) / tf.constant(2, dtype=tf.float64)
 
         return output
 
     def call(self, inputs, *args, **kwargs):
         """Forward-feed when the hidden layer is used."""
-
         # Get the individual parameters of the model, here l1 and l3
         l1 = inputs[:, 0:1]
         l5 = inputs[:, 8:9]
 
         # Do the forward-feed
         output_1 = tf.matmul(l1, self.weights_1) + self.biases[0]
-        output_2 = tf.matmul(inputs[:,0:3], self.weights_2) + self.biases[1]
-        output_3 = tf.matmul(inputs[:,0:5], self.weights_3) + self.biases[2]
-        output_4 = tf.matmul(inputs[:,2:5], self.weights_4) + self.biases[3]
-        output_5 = tf.matmul(inputs[:,2:7], self.weights_5) + self.biases[4]
-        output_6 = tf.matmul(inputs[:,4:7], self.weights_6) + self.biases[5]
-        output_7 = tf.matmul(inputs[:,4:9], self.weights_7) + self.biases[6]
-        output_8 = tf.matmul(inputs[:,6:9], self.weights_8) + self.biases[7]
+        output_2 = tf.matmul(inputs[:, 0:3], self.weights_2) + self.biases[1]
+        output_3 = tf.matmul(inputs[:, 0:5], self.weights_3) + self.biases[2]
+        output_4 = tf.matmul(inputs[:, 2:5], self.weights_4) + self.biases[3]
+        output_5 = tf.matmul(inputs[:, 2:7], self.weights_5) + self.biases[4]
+        output_6 = tf.matmul(inputs[:, 4:7], self.weights_6) + self.biases[5]
+        output_7 = tf.matmul(inputs[:, 4:9], self.weights_7) + self.biases[6]
+        output_8 = tf.matmul(inputs[:, 6:9], self.weights_8) + self.biases[7]
         output_9 = tf.matmul(l5, self.weights_9) + self.biases[8]
 
         # Apply the activation function: here 'ReLU'
-        output_2 = tf.nn.relu(output_2) + 10 ** -14
-        output_3 = tf.nn.relu(output_3) + 10 ** -14
-        output_4 = tf.nn.relu(output_4) + 10 ** -14
-        output_5 = tf.nn.relu(output_5) + 10 ** -14
-        output_6 = tf.nn.relu(output_6) + 10 ** -14
-        output_7 = tf.nn.relu(output_7) + 10 ** -14
-        output_8 = tf.nn.relu(output_8) + 10 ** -14
+        output_2 = tf.nn.relu(output_2) + 10**-14
+        output_3 = tf.nn.relu(output_3) + 10**-14
+        output_4 = tf.nn.relu(output_4) + 10**-14
+        output_5 = tf.nn.relu(output_5) + 10**-14
+        output_6 = tf.nn.relu(output_6) + 10**-14
+        output_7 = tf.nn.relu(output_7) + 10**-14
+        output_8 = tf.nn.relu(output_8) + 10**-14
 
         scaled_a1 = tf.identity(output_2)
         scaled_a2 = tf.identity(output_4)

@@ -43,7 +43,7 @@ start-flrw-net = "python FLRW-Net/src/FLRW_Net.py"
 [tool.ruff]
 lint.select = ["D", "F", "F841", "I", "Q", "W292", "ANN"]
 lint.ignore = ["D107", "D203", "D211", "D213"]
-line-length = 120
+line-length = 140
 exclude = [".venv"]
 
 # Per-file ignores (optional)
