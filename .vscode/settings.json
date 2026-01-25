@@ -1,5 +1,6 @@
 {
-  "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
-  "python.terminal.activateEnvironment": true,
-  "python.analysis.extraPaths": ["./FLRW-Net/src"]
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "autoDocstring.docstringFormat": "google",
+  "python.analysis.extraPaths": ["./src"],
 }

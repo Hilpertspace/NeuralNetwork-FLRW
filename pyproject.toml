@@ -5,6 +5,8 @@ description = "FLRW-Net is a neural network that solves the equations of motion 
 authors = [
     {name = "Florian Emanuel Hilpert", email = "82518583+Hilpertspace@users.noreply.github.com"},
 ]
+readme = "README.md"
+license = {text = "LICENSE"}
 
 requires-python = ">=3.9,<3.11"
 
@@ -18,39 +20,52 @@ dependencies = [
     # Apple Silicon
     "tensorflow-macos==2.10.0; platform_system == 'Darwin' and platform_machine == 'arm64'",
     "tensorflow-metal; platform_system == 'Darwin' and platform_machine == 'arm64'",
-
-    "numpy<2.0",
     "tqdm==4.62.2",
-    "matplotlib<3.11,>=3.8"
+    "matplotlib<3.11,>=3.8",
+    "numpy >=1.20,<1.24"
 ]
 
 [project.optional-dependencies]
 dev = ["ruff>=0.1.0", "pytest>=7.0"]
 notebooks = ["ipykernel>=6.0", "notebook>=6.4"]
 
-readme = "README.md"
-license = {text = "LICENSE"}
+[tool.pdm.workspace]
+members = ["FLRW_Net"]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [tool.pdm]
-distribution = false
+distribution = true
+package-dir = "src"
+
+[tool.pdm.build]
+includes = ["FLRW_Net"]
 
 [tool.pdm.scripts]
 lint = "ruff check . --fix"
 format = "ruff format ."
 test = "pytest"
-start-flrw-net = "python FLRW-Net/src/FLRW_Net.py"
+start-flrw-net = "python src/FLRW_Net/FLRW_Net.py"
 
 [tool.ruff]
-lint.select = ["D", "F", "F841", "I", "Q", "W292", "ANN"]
-lint.ignore = ["D107", "D203", "D211", "D213"]
+lint.select = ["F", "E", "W", "I", "N", "D", "UP", "ASYNC", "BLE", "B", "A", "COM", "C4",
+    "DTZ", "DJ", "EM", "FA", "ISC", "LOG", "G", "PIE", "T20", "PT", "Q", "RSE", "RET", "SIM",
+    "TID", "TCH", "INT", "ARG", "PTH", "PD", "PL", "TRY", "FLY", "NPY", "PERF", "FURB", "RUF", "ANN"]
+lint.ignore = ["ISC001", "COM812", "DTZ001", "T201", "RET504", "D100"]
 line-length = 140
 exclude = [".venv"]
 
 # Per-file ignores (optional)
 [tool.ruff.lint.per-file-ignores]
-"FLRW-Net/tests/*" = ["D", "ANN"]
+"tests/*" = ["D", "ANN"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.pytest.ini_options]
 testpaths = [
-  "FLRW-Net/tests"
+  "tests"
 ]
+pythonpath=["src"]
