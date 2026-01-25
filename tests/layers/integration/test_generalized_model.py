@@ -5,7 +5,7 @@ from FLRW_Net.networks.test import GeneralizedModel
 
 
 @pytest.fixture(scope="module")
-def setup_matmul_test() -> dict:
+def setup_network_test() -> dict:
     slice_specs_3 = [
         (0, 1),   # l1
         (0, 3),   # first 3 inputs
@@ -39,14 +39,14 @@ def setup_matmul_test() -> dict:
         "expected_output_2": expected_output_2,
     }
 
-def test_matmul_layer(setup_matmul_test: dict) -> None:
+def test_generalized_network(setup_network_test: dict) -> None:
     tf.keras.backend.set_floatx("float64")
-    slice_specs_3 = setup_matmul_test["slice_specs_3"]
-    slice_specs_2 = setup_matmul_test["slice_specs_2"]
-    inputs_3 = setup_matmul_test["inputs_3"]
-    inputs_2 = setup_matmul_test["inputs_2"]
-    expected_output_3 = setup_matmul_test["expected_output_3"]
-    expected_output_2 = setup_matmul_test["expected_output_2"]
+    slice_specs_3 = setup_network_test["slice_specs_3"]
+    slice_specs_2 = setup_network_test["slice_specs_2"]
+    inputs_3 = setup_network_test["inputs_3"]
+    inputs_2 = setup_network_test["inputs_2"]
+    expected_output_3 = setup_network_test["expected_output_3"]
+    expected_output_2 = setup_network_test["expected_output_2"]
 
     model_3 = GeneralizedModel(slice_specs_3)
     output_3 = model_3(inputs_3)
