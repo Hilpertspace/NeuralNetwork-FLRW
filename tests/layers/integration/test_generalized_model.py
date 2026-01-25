@@ -3,6 +3,7 @@ import tensorflow as tf
 
 from FLRW_Net.networks.test import GeneralizedModel
 
+
 @pytest.fixture(scope="module")
 def setup_matmul_test() -> dict:
     slice_specs_3 = [
@@ -23,14 +24,19 @@ def setup_matmul_test() -> dict:
         (4, 5),   # l3
     ]
 
-    inputs_3 = tf.constant([[1, 0.5, 2, 0.5, 3, 0.5, 4]], dtype=tf.float64)
-    inputs_2 = tf.constant([[1, 0.5, 2, 0.5, 3]], dtype=tf.float64)
+    inputs_3 = tf.constant([[-1, 0.5, -1, 0.5, 3, -0.5, 4]], dtype=tf.float64)
+    inputs_2 = tf.constant([[1, 0.5, 2, 0.5, -3]], dtype=tf.float64)
+
+    expected_output_3 = tf.constant([[-1, 0.5, 0, 0.5, 3, 0, 4]], shape=(1, 7), dtype=tf.float64)
+    expected_output_2 = tf.constant([[1, 0.5, 2, 0.5, -3]], shape=(1, 5), dtype=tf.float64)
 
     return {
         "slice_specs_2": slice_specs_2,
         "slice_specs_3": slice_specs_3,
         "inputs_2": inputs_2,
-        "inputs_3": inputs_3
+        "inputs_3": inputs_3,
+        "expected_output_3": expected_output_3,
+        "expected_output_2": expected_output_2,
     }
 
 def test_matmul_layer(setup_matmul_test: dict) -> None:
@@ -39,6 +45,8 @@ def test_matmul_layer(setup_matmul_test: dict) -> None:
     slice_specs_2 = setup_matmul_test["slice_specs_2"]
     inputs_3 = setup_matmul_test["inputs_3"]
     inputs_2 = setup_matmul_test["inputs_2"]
+    expected_output_3 = setup_matmul_test["expected_output_3"]
+    expected_output_2 = setup_matmul_test["expected_output_2"]
 
     model_3 = GeneralizedModel(slice_specs_3)
     output_3 = model_3(inputs_3)
@@ -46,5 +54,5 @@ def test_matmul_layer(setup_matmul_test: dict) -> None:
     model_2 = GeneralizedModel(slice_specs_2)
     output_2 = model_2(inputs_2)
 
-    tf.debugging.assert_equal(output_3, inputs_3)
-    tf.debugging.assert_equal(output_2, inputs_2)
+    tf.debugging.assert_equal(output_3, expected_output_3)
+    tf.debugging.assert_equal(output_2, expected_output_2)
