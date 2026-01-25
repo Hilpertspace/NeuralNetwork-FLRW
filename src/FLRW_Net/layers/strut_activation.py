@@ -11,7 +11,7 @@ class StrutActivation(tf.keras.layers.Layer):
 
     @tf.function
     def _strut_activation(self, inputs: tf.Tensor) -> tf.Tensor:
-        """Define an activation function for the strut-neurons."""
+        """Activation function for the strut-neurons."""
         l_n = tf.cast(inputs[:, 0:1], tf.float64)
         m_n = tf.cast(inputs[:, 1:2], tf.float64)
         l_n_plus_one = tf.cast(inputs[:, 2:3], tf.float64)
@@ -24,7 +24,7 @@ class StrutActivation(tf.keras.layers.Layer):
     @tf.function
     def call(self, inputs: tf.Tensor) -> tf.Tensor:
         """Apply the strut activation function to the strut-neurons."""
-        num_features = tf.shape(inputs)[1] # = 2*time_steps+1
+        num_features = tf.shape(inputs)[1]
 
         # Indices of every second feature (1, 3, 5, ...)
         indices = tf.range(1, num_features, 2)
