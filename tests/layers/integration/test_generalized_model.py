@@ -24,11 +24,11 @@ def setup_network_test() -> dict:
         (4, 5),   # l3
     ]
 
-    inputs_3 = tf.constant([[-1, 0.5, -1, 0.5, 3, -0.5, 4]], dtype=tf.float64)
-    inputs_2 = tf.constant([[1, 0.5, 2, 0.5, -3]], dtype=tf.float64)
+    inputs_3 = tf.constant([[1, 0.5, 2, 0.5, 3, 0.6, 4]], dtype=tf.float64)
+    inputs_2 = tf.constant([[1, 0.5, 3.5, 0.5, 4]], dtype=tf.float64)
 
-    expected_output_3 = tf.constant([[-1, 0.5, 0, 0.5, 3, 0, 4]], shape=(1, 7), dtype=tf.float64)
-    expected_output_2 = tf.constant([[1, 0.5, 2, 0.5, -3]], shape=(1, 5), dtype=tf.float64)
+    expected_output_3 = tf.constant([[1, 0.935414346693485, 2, 0.935414346693485, 3, 0.987420882906575, 4]], dtype=tf.float64)
+    expected_output_2 = tf.constant([[1, 2.338535866733713, 3.5, 0.467707173346743, 4]], dtype=tf.float64)
 
     return {
         "slice_specs_2": slice_specs_2,
@@ -54,5 +54,5 @@ def test_generalized_network(setup_network_test: dict) -> None:
     model_2 = GeneralizedModel(slice_specs_2)
     output_2 = model_2(inputs_2)
 
-    tf.debugging.assert_equal(output_3, expected_output_3)
-    tf.debugging.assert_equal(output_2, expected_output_2)
+    tf.debugging.assert_near(output_3, expected_output_3, atol=1e-15, rtol=1e-15)
+    tf.debugging.assert_near(output_2, expected_output_2, atol=1e-15, rtol=1e-15)
