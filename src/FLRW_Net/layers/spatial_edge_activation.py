@@ -29,7 +29,7 @@ class SpatialEdgeActivation(tf.keras.layers.Layer):
         """Apply the strut activation function to the strut-neurons."""
         num_features = tf.shape(inputs)[1]
 
-        # Indices of every third feature (2, 5, 8, ...)
+        # Indices of every second feature (2, 4, 6, ...)
         indices = tf.range(2, num_features-2, 2)
 
         # Compute start and end indices for 3-feature slices

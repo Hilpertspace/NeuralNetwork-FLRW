@@ -7,6 +7,7 @@ from FLRW_Net.layers.matmul import Matmul
 from FLRW_Net.layers.relu import PartialReLU
 from FLRW_Net.layers.spatial_edge_activation import SpatialEdgeActivation
 from FLRW_Net.layers.strut_activation import StrutActivation
+from FLRW_Net.utils.losses import spatial_edge_losses, strut_losses
 
 
 class GeneralizedModel(tf.keras.Model):
@@ -38,3 +39,27 @@ class GeneralizedModel(tf.keras.Model):
         outputs_6 = self.strut_activation_layer(outputs_5)
 
         return outputs_6
+
+    @tf.function
+    def custom_train_step(self, inputs: tf.Tensor) -> tf.Tensor:
+        """Define a single step of training."""
+        with tf.GradientTape(persistent=True) as tape:
+            prediction = self(inputs, training=True)
+
+            loss_struts = strut_losses(prediction)
+            loss_spatial_edges = spatial_edge_losses(prediction)
+
+            loss_edge_1 = self.EOM_edges(prediction[:, 0:5])
+            loss_edge_2 = self.EOM_edges(prediction[:, 2:7])
+
+            loss = (loss_strut_1 + loss_strut_2 + loss_strut_3 + loss_edge_1 + loss_edge_2) / tf.constant(5, dtype=tf.float64)
+
+        # Tell tensorflows automatic gradient computation to compute the gradients
+        # of the loss with respect to the trainable variables of the network:
+        # here only the three weights of the strut-neuron in the hidden layer
+        gradients = tape.gradient(loss, self.trainable_variables)
+
+        # Apply the gradients to update the weights
+        self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
+
+        return {"loss": loss}
