@@ -1,7 +1,7 @@
 import pytest
 import tensorflow as tf
 
-from FLRW_Net.layers.matmul import Matmul
+from FLRW_Net.layers.matmul import SingleSliceMatmul
 
 
 @pytest.fixture(scope="module")
@@ -26,13 +26,13 @@ def test_matmul_layer(setup_matmul_test: dict) -> None:
     expected_output_3 = setup_matmul_test["expected_output_3"]
     expected_output_5 = setup_matmul_test["expected_output_5"]
 
-    model_1 = Matmul(0, 1)
+    model_1 = SingleSliceMatmul(0, 1)
     output_1 = model_1(inputs)
 
-    model_3 = Matmul(0, 3)
+    model_3 = SingleSliceMatmul(0, 3)
     output_3 = model_3(inputs)
 
-    model_5 = Matmul(0, 5)
+    model_5 = SingleSliceMatmul(0, 5)
     output_5 = model_5(inputs)
 
     tf.debugging.assert_equal(output_1, expected_output_1)

@@ -2,8 +2,8 @@
 import tensorflow as tf
 
 
-class Matmul(tf.keras.layers.Layer):
-    """Implements output_i = inputs[:, start:end] @ weight + bias."""
+class SingleSliceMatmul(tf.keras.layers.Layer):
+    """Implements output = inputs[:, start:end] @ weight + bias for a single slice."""
 
     dense: tf.keras.layers.Dense
 
@@ -49,6 +49,7 @@ class Matmul(tf.keras.layers.Layer):
             )
             super().build(input_shape)
 
+    @tf.function
     def call(self, inputs: tf.Tensor) -> tf.Tensor:
         """Actually perform the matrix multiplication."""
         indices = tf.range(self._start, self._end)
@@ -57,3 +58,39 @@ class Matmul(tf.keras.layers.Layer):
         if self._use_identity:
             return sliced
         return self.dense(sliced)
+
+class Matmul(tf.keras.layers.Layer):
+    """Implements the forward feed for all slices."""
+
+    def __init__(self, number_of_timesteps: int) -> None:
+        """Initialize the layer."""
+        super().__init__()
+        self._slice_specs = self._set_slice_specs(number_of_timesteps)
+        self.slice_layers = [SingleSliceMatmul(start, end) for start, end in self._slice_specs]
+
+    @staticmethod
+    def _set_slice_specs(n: int) -> list[tuple[int, int]]:
+        """Compute the slice specs from the number of time steps."""
+        length = 2*n-1
+        specs = []
+
+        # First element
+        specs.append((0, 1))
+
+        # Sliding windows of size 3
+        specs.extend((center-1, center+2) for center in range(1, length+1, 2))
+
+        if length >= 2:  # noqa: PLR2004
+            # Sliding windows of size 5
+            specs.extend((center-2, center+3) for center in range(2, length, 2))
+
+        # Last element
+        specs.append((length+1, length+2))
+
+        return specs
+
+    @tf.function
+    def call(self, inputs: tf.Tensor) -> tf.Tensor:
+        """Apply matrix multiplication to the inputs."""
+        outputs = [layer(inputs) for layer in self.slice_layers]
+        return tf.concat(outputs, axis=1)

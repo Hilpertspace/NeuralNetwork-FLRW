@@ -1,6 +1,6 @@
 """Utility functions for FLRW-Net."""
 
-import tensporflow as tf
+import tensorflow as tf
 
 
 def get_triangulation_params(triangulation: str) -> dict[str, int]:
