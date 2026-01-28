@@ -1,7 +1,7 @@
 """Minimum example for a generalized model."""
 
 import tensorflow as tf
-import tqdm
+from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
 
 from FLRW_Net.layers.assembly import Assembly
 from FLRW_Net.layers.matmul import Matmul
@@ -9,12 +9,13 @@ from FLRW_Net.layers.relu import PartialReLU
 from FLRW_Net.layers.spatial_edge_activation import SpatialEdgeActivation
 from FLRW_Net.layers.strut_activation import StrutActivation
 from FLRW_Net.utils.losses import spatial_edge_losses, strut_losses
+from FLRW_Net.utils.utils import Model, get_triangulation_params
 
 
 class GeneralizedModel(tf.keras.Model):
     """Minimum example for a generalized model."""
 
-    def __init__(self, number_of_timesteps: int) -> None:
+    def __init__(self, number_of_timesteps: int, triangulation: str, cosmological_constant: float) -> None:
         """Initialize the model."""
         super().__init__()
         self.matmul = Matmul(number_of_timesteps)
@@ -23,7 +24,23 @@ class GeneralizedModel(tf.keras.Model):
         self.spatial_edge_activation = SpatialEdgeActivation()
         self.assembly = Assembly()
 
+        self.relu_layer.trainable = False
+        self.strut_activation_layer.trainable = False
+        self.spatial_edge_activation.trainable = False
+        self.assembly.trainable = False
+
+        self.model_params = self._set_triangulation_params(triangulation, cosmological_constant)
         self.loss_threshold = 1e-5
+
+    @staticmethod
+    def _set_triangulation_params(triangulation: str, cosmological_constant: float) -> tuple:
+        """Construct the triangulation params."""
+        triangulation_params = get_triangulation_params(triangulation)
+        tensor_params = {key: tf.constant(value, dtype=tf.float64) for key, value in triangulation_params._asdict().items()}
+        return Model(
+            **tensor_params,
+            lamb=tf.constant(cosmological_constant, dtype=tf.float64)
+        )
 
     @tf.function
     def call(self, inputs: tf.Tensor) -> tf.Tensor:
@@ -47,14 +64,14 @@ class GeneralizedModel(tf.keras.Model):
         with tf.GradientTape(persistent=True) as tape:
             prediction = self(inputs, training=True)
 
-            loss_struts = strut_losses(prediction)
-            loss_spatial_edges = spatial_edge_losses(prediction)
+            loss_struts = strut_losses(prediction, self.model_params)
+            loss_spatial_edges = spatial_edge_losses(prediction, self.model_params)
             combined = tf.concat([loss_struts, loss_spatial_edges], axis=1)
             loss = tf.reduce_mean(combined, axis=1)
 
         # Tell tensorflows automatic gradient computation to compute the gradients
         # of the loss with respect to the trainable variables of the network.
-        gradients = tape.gradient(loss, self.slice_layers.trainable_variables)
+        gradients = tape.gradient(loss, self.trainable_variables)
 
         # Apply the gradients to update the weights
         self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
@@ -70,7 +87,7 @@ class GeneralizedModel(tf.keras.Model):
         loss_history = []
         best_weights = [tf.Variable(w, trainable=False) for w in self.trainable_variables]
 
-        for _ in tqdm(range(epochs), desc="Training", unit="step", ncols=70): # pyright: ignore[reportCallIssue]
+        for _ in tqdm(range(epochs), desc="Training", unit="step", ncols=70):
             loss = self._custom_train_step(inputs)
             loss_value = float(loss)
             loss_history.append(loss_value)

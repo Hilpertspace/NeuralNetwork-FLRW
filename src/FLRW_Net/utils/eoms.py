@@ -1,11 +1,11 @@
 import numpy as np
 import tensorflow as tf
 
-from FLRW_Net.utils.utils import crop
+from FLRW_Net.utils.utils import Model, crop
 
 
 @tf.function
-def eom_struts(prediction: tf.Tensor, triangulation_params: dict[str, tf.Tensor]) -> tf.Tensor:
+def eom_struts(prediction: tf.Tensor, model_params: Model) -> tf.Tensor:
     """Compute the network's loss by evaluating the EOMm term.
 
     Its value should be 0 in the presence of a classical solution.
@@ -15,12 +15,12 @@ def eom_struts(prediction: tf.Tensor, triangulation_params: dict[str, tf.Tensor]
     m1 = prediction[0, 1]
     l2 = prediction[0, 2]
 
-    lamb = triangulation_params["lamb"]
-    n3 = triangulation_params["n3"]
-    n1 = triangulation_params["n1"]
-    nte = triangulation_params["nte"]
+    lamb = model_params.lamb
+    n3 = model_params.n3
+    n1 = model_params.n1
+    nte = model_params.nte
 
-    pi = tf.constant(np.pi(), dtype=tf.float64)
+    pi = tf.constant(np.pi, dtype=tf.float64)
 
     # Compute the value of the EOMm: the first fraction
     numerator1 = -(l1 + l2) * (tf.math.square(l1) + tf.math.square(l2)) * lamb * m1 * n3
@@ -74,14 +74,14 @@ def arg2(inputs: tf.Tensor) -> tf.Tensor:
     )
 
 @tf.function
-def eoml1(inputs: tf.Tensor, triangulation_params: dict[str, tf.Tensor]) -> tf.Tensor:
+def eoml1(inputs: tf.Tensor, model_params: Model) -> tf.Tensor:
     """Part of the equation of motion of the spatial edge that has the number of tetrahedra n3 as a prefactor."""
     l1 = inputs[0, 0]
     m1 = inputs[0, 1]
     l2 = inputs[0, 2]
 
-    lamb = triangulation_params["lamb"]
-    n3 = triangulation_params["n3"]
+    lamb = model_params.lamb
+    n3 = model_params.n3
 
     output = (
         1
@@ -94,11 +94,11 @@ def eoml1(inputs: tf.Tensor, triangulation_params: dict[str, tf.Tensor]) -> tf.T
     return output
 
 @tf.function
-def eoml_acoses(inputs: tf.Tensor, triangulation_params: dict[str, tf.Tensor]) -> tf.Tensor:
+def eoml_acoses(inputs: tf.Tensor, model_params: Model) -> tf.Tensor:
     """Part of the equation of motion of the spatial edge that has the number of triangles n2 as a prefactor."""
     l2 = inputs[0, 2]
-    n2 = triangulation_params["n2"]
-    pi = tf.constant(np.pi(), dtype=tf.float64)
+    n2 = model_params.n2
+    pi = tf.constant(np.pi, dtype=tf.float64)
 
     tmp1 = crop(arg2(inputs[:, :3]))
     tmp2 = crop(arg2(tf.reverse(inputs[:, 2:], axis=[1])))
@@ -106,7 +106,7 @@ def eoml_acoses(inputs: tf.Tensor, triangulation_params: dict[str, tf.Tensor]) -
     return output
 
 @tf.function
-def eoml2(inputs: tf.Tensor, triangulation_params: dict[str, tf.Tensor]) -> tf.Tensor:
+def eoml2(inputs: tf.Tensor, model_params: Model) -> tf.Tensor:
     """Part of the equation of motion of the spatial edge that has the number of edges n1 as a prefactor."""
     l1 = inputs[0, 0]
     m1 = inputs[0, 1]
@@ -114,10 +114,10 @@ def eoml2(inputs: tf.Tensor, triangulation_params: dict[str, tf.Tensor]) -> tf.T
     m2 = inputs[0, 3]
     l3 = inputs[0, 4]
 
-    n1 = triangulation_params["n1"]
-    nte = triangulation_params["nte"]
+    n1 = model_params.n1
+    nte = model_params.nte
 
-    pi = tf.constant(np.pi(), dtype=tf.float64)
+    pi = tf.constant(np.pi, dtype=tf.float64)
 
     output = (
         n1
@@ -133,11 +133,11 @@ def eoml2(inputs: tf.Tensor, triangulation_params: dict[str, tf.Tensor]) -> tf.T
     return output
 
 @tf.function
-def eom_spatial_edges(inputs: tf.Tensor, triangulation_params: dict[str, tf.Tensor]) -> tf.Tensor:
+def eom_spatial_edges(inputs: tf.Tensor, model_params: Model) -> tf.Tensor:
     """Final EOMl term ^ 2."""
-    term1 = eoml1(inputs[:, :3], triangulation_params)
-    term2 = eoml1(tf.reverse(inputs[:, 2:], axis=[1]), triangulation_params)
-    term3 = eoml_acoses(inputs, triangulation_params)
-    term4 = eoml2(inputs, triangulation_params)
-    term5 = eoml2(tf.reverse(inputs, axis=[1]), triangulation_params)
+    term1 = eoml1(inputs[:, :3], model_params)
+    term2 = eoml1(tf.reverse(inputs[:, 2:], axis=[1]), model_params)
+    term3 = eoml_acoses(inputs, model_params)
+    term4 = eoml2(inputs, model_params)
+    term5 = eoml2(tf.reverse(inputs, axis=[1]), model_params)
     return tf.math.square(term1 + term2 + term3 - term4 - term5)

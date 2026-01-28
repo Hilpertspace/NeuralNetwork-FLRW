@@ -1,9 +1,26 @@
 """Utility functions for FLRW-Net."""
 
+from typing import NamedTuple
+
 import tensorflow as tf
 
 
-def get_triangulation_params(triangulation: str) -> dict[str, int]:
+class Triangulation(NamedTuple):
+    """Tensorflow graph-execution compatible triangulation params."""
+    n1: tf.Tensor
+    n2: tf.Tensor
+    n3: tf.Tensor
+    nte: tf.Tensor
+
+class Model(NamedTuple):
+    """Tensorflow graph-execution compatible model params."""
+    n1: tf.Tensor
+    n2: tf.Tensor
+    n3: tf.Tensor
+    nte: tf.Tensor
+    lamb: tf.Tensor
+
+def get_triangulation_params(triangulation: str) -> Triangulation:
     """Set the parameters that specify the spatial triangulations."""
     params_5_cell = {
         "n1": 10,
@@ -27,9 +44,9 @@ def get_triangulation_params(triangulation: str) -> dict[str, int]:
     }
 
     triangulations = {
-        "5-cell": params_5_cell,
-        "16-cell": params_16_cell,
-        "600-cell": params_600_cell,
+        "5-cell": Triangulation(**params_5_cell),
+        "16-cell": Triangulation(**params_16_cell),
+        "600-cell": Triangulation(**params_600_cell),
     }
 
     if triangulation not in triangulations:
