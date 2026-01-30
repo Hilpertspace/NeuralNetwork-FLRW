@@ -17,20 +17,19 @@ def sliding_slice_losses(  # noqa: PLR0913
     loss_fn: Callable[[tf.Tensor], tf.Tensor],
 ) -> tf.Tensor:
     """Compute the losses for a given loss function."""
+    def fn(slice_: tf.Tensor) -> tf.Tensor:
+        return loss_fn(slice_, model_params)
+
     slices = tf.signal.frame(
         prediction,
         frame_length=slice_length,
         frame_step=step,
         axis=1
     )[:, start:stop]
+    slices = tf.transpose(slices, perm=[1, 0, 2])
+    losses = tf.map_fn(fn, slices, fn_output_signature=tf.float64)
 
-    batch_size = tf.shape(slices)[0]
-    number_of_slices = tf.shape(slices)[1]
-
-    slices = tf.reshape(slices, (batch_size * number_of_slices, slice_length))
-    losses = loss_fn(slices, model_params)
-
-    return tf.reshape(losses, (batch_size, number_of_slices))
+    return tf.expand_dims(losses, axis=0)
 
 @tf.function
 def spatial_edge_losses(prediction: tf.Tensor, model_params: Model) -> tf.Tensor:

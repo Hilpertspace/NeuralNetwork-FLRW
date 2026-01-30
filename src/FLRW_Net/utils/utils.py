@@ -63,3 +63,24 @@ def crop(arg: tf.Tensor) -> tf.Tensor:
         tf.constant(-1.0, dtype=arg.dtype),
         tf.constant(1.0, dtype=arg.dtype),
     )
+
+
+def set_slice_specs(n: int) -> list[tuple[int, int]]:
+    """Compute the slice specs from the number of time steps."""
+    length = 2*n-1
+    specs = []
+
+    # First element
+    specs.append((0, 1))
+
+    # Sliding windows of size 3
+    specs.extend((center-1, center+2) for center in range(1, length+1, 2))
+
+    if length >= 2:  # noqa: PLR2004
+        # Sliding windows of size 5
+        specs.extend((center-2, center+3) for center in range(2, length, 2))
+
+    # Last element
+    specs.append((length+1, length+2))
+
+    return specs
