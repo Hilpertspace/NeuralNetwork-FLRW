@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 import tensorflow as tf
 
@@ -18,8 +19,16 @@ def inputs() -> dict:
         "invalid_patial_edges": tf.constant([[-1, 0.7, -2]], dtype=tf.float64),
     }
 
+    arg1 = {
+        "minus_1_tuncation": tf.constant([[1, 0.6, 2]], dtype=tf.float64),
+        "one_truncation": tf.constant([[1, 0.51, 2]], dtype=tf.float64),
+        "zero": tf.constant([[1, np.sqrt(2), 3]], dtype=tf.float64),
+        "valid-range": tf.constant([[1, 0.68, 2]], dtype=tf.float64),
+    }
+
     return {
         "eom_struts": eom_struts,
+        "arg1": arg1,
     }
 
 @pytest.fixture(scope="module")
@@ -57,8 +66,16 @@ def expected_outputs() -> dict:
         },
     }
 
+    arg1 = {
+        "minus_1_tuncation": tf.constant(-1, dtype=tf.float64),
+        "one_truncation": tf.constant(1, dtype=tf.float64),
+        "zero": tf.constant(0, dtype=tf.float64),
+        "valid-range": tf.constant(-0.09710743801652864, dtype=tf.float64),
+    }
+
     return {
         "eom_struts": eom_struts,
+        "arg1": arg1,
     }
 
 @pytest.fixture(scope="module")
@@ -134,9 +151,29 @@ def test_eom_struts(case: str, triangulation: str, inputs: dict, expected_output
             atol=1e-13
         )
 
+@pytest.mark.parametrize(
+    "case",
+    [
+        "minus_1_tuncation",
+        "one_truncation",
+        "zero",
+        "valid-range",
+    ]
+)
+def test_arg1(case: str, inputs: dict, expected_outputs: dict) -> None:
+    function_name = "arg1"
+    argument = inputs[function_name][case]
+    expected_output = expected_outputs[function_name][case]
 
-def test_arg1() -> None:
-    assert False
+    if case == "zero":
+        tf.debugging.assert_near(
+            arg1(argument),
+            expected_output,
+            rtol=1e-9,
+            atol=1e-13
+        )
+    else:
+        assert arg1(argument) == expected_output
 
 
 def test_arg2() -> None:

@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-from FLRW_Net.utils.utils import Model, crop, assert_non_negative
+from FLRW_Net.utils.utils import Model, assert_non_negative, crop
 
 
 @tf.function
