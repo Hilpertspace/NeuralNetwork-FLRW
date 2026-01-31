@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-from FLRW_Net.utils.utils import Model, crop
+from FLRW_Net.utils.utils import Model, crop, assert_non_negative
 
 
 @tf.function
@@ -14,6 +14,10 @@ def eom_struts(prediction: tf.Tensor, model_params: Model) -> tf.Tensor:
     l1 = prediction[0, 0]
     m1 = prediction[0, 1]
     l2 = prediction[0, 2]
+
+    assert_non_negative(l1, "l1")
+    assert_non_negative(m1, "m1")
+    assert_non_negative(l2, "l2")
 
     lamb = model_params.lamb
     n3 = model_params.n3

@@ -1,5 +1,7 @@
 """Minimum example for a generalized model."""
 
+from typing import TYPE_CHECKING
+
 import tensorflow as tf
 from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
 
@@ -9,7 +11,10 @@ from FLRW_Net.layers.relu import PartialReLU
 from FLRW_Net.layers.spatial_edge_activation import SpatialEdgeActivation
 from FLRW_Net.layers.strut_activation import StrutActivation
 from FLRW_Net.utils.losses import spatial_edge_losses, strut_losses
-from FLRW_Net.utils.utils import Model, get_triangulation_params
+from FLRW_Net.utils.utils import set_model_params
+
+if TYPE_CHECKING:
+    from FLRW_Net.utils.utils import Model
 
 
 class GeneralizedModel(tf.keras.Model):
@@ -29,18 +34,8 @@ class GeneralizedModel(tf.keras.Model):
         self.spatial_edge_activation.trainable = False
         self.assembly.trainable = False
 
-        self.model_params = self._set_triangulation_params(triangulation, cosmological_constant)
+        self.model_params: Model = set_model_params(triangulation, cosmological_constant)
         self.loss_threshold = 1e-5
-
-    @staticmethod
-    def _set_triangulation_params(triangulation: str, cosmological_constant: float) -> tuple:
-        """Construct the triangulation params."""
-        triangulation_params = get_triangulation_params(triangulation)
-        tensor_params = {key: tf.constant(value, dtype=tf.float64) for key, value in triangulation_params._asdict().items()}
-        return Model(
-            **tensor_params,
-            lamb=tf.constant(cosmological_constant, dtype=tf.float64)
-        )
 
     @tf.function
     def call(self, inputs: tf.Tensor) -> tf.Tensor:

@@ -55,6 +55,15 @@ def get_triangulation_params(triangulation: str) -> Triangulation:
 
     return triangulations[triangulation]
 
+def set_model_params(triangulation: str, cosmological_constant: float) -> Model:
+    """Construct the triangulation params."""
+    triangulation_params = get_triangulation_params(triangulation)
+    tensor_params = {key: tf.constant(value, dtype=tf.float64) for key, value in triangulation_params._asdict().items()}
+    return Model(
+        **tensor_params,
+        lamb=tf.constant(cosmological_constant, dtype=tf.float64)
+    )
+
 @tf.function
 def crop(arg: tf.Tensor) -> tf.Tensor:
     """Clamp values to the valid domain of tf.acos: [-1, 1]."""
@@ -84,3 +93,11 @@ def set_slice_specs(n: int) -> list[tuple[int, int]]:
     specs.append((length+1, length+2))
 
     return specs
+
+def assert_non_negative(value: tf.Tensor, name: str) -> None:
+    """Ensure that the given argument is non-negative."""
+    tf.debugging.assert_greater_equal(
+        value,
+        tf.constant(0, dtype=tf.float64),
+        message=f"Parameter {name} must not be negative."
+    )

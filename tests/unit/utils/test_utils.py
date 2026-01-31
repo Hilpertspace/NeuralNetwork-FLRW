@@ -1,7 +1,7 @@
 import pytest
 import tensorflow as tf
 
-from FLRW_Net.utils.utils import crop, get_triangulation_params, set_slice_specs, Triangulation
+from FLRW_Net.utils.utils import assert_non_negative, crop, get_triangulation_params, set_slice_specs, Triangulation
 
 
 @pytest.fixture(scope="module")
@@ -76,7 +76,6 @@ def test_crop(value: tf.Tensor) -> None:
 def test_get_triangualtion_params(triangulation: str) -> None:
     if triangulation != "invalid":
         params = get_triangulation_params(triangulation)
-        assert isinstance(params, Triangulation)
         if triangulation == "5-cell":
             model = {
                 "n1": 10,
@@ -98,6 +97,7 @@ def test_get_triangualtion_params(triangulation: str) -> None:
                 "n3": 600,
                 "nte": 5,
             }
+        assert isinstance(params, Triangulation)
         assert model == params._asdict()
     else:
         with pytest.raises(
@@ -115,4 +115,28 @@ def test_get_triangualtion_params(triangulation: str) -> None:
     ]
 )
 def test_set_slice_specs(number_of_timesteps: int, slice_specs_name: str, utils_test_data: dict[str, list[tuple]]) -> None:
-    assert set_slice_specs(number_of_timesteps) == utils_test_data[slice_specs_name]
+    slice_specs = set_slice_specs(number_of_timesteps)
+    assert isinstance(slice_specs, list)
+    assert slice_specs == utils_test_data[slice_specs_name]
+
+@pytest.mark.parametrize(
+    ("case", "name", "value"),
+    [
+        ("success", "l1", tf.constant(1.5, dtype=tf.float64)),
+        ("success", "l1", tf.constant(0.0, dtype=tf.float64)),
+        ("failure", "l1", tf.constant(-1, dtype=tf.float64)),
+        ("success", "m1", tf.constant(1.5, dtype=tf.float64)),
+        ("success", "m1", tf.constant(0.0, dtype=tf.float64)),
+        ("failure", "m1", tf.constant(-1, dtype=tf.float64)),
+        ("success", "l2", tf.constant(1.5, dtype=tf.float64)),
+        ("success", "l2", tf.constant(0.0, dtype=tf.float64)),
+        ("failure", "l2", tf.constant(-1, dtype=tf.float64)),
+    ]
+)
+def test_assert_non_negative(case: str, name: str, value: tf.Tensor) -> None:
+    if case == "success":
+        assert assert_non_negative(value, name) is None
+    else:
+        with pytest.raises(tf.errors.InvalidArgumentError,
+        match=f"Parameter {name} must not be negative."):
+            assert_non_negative(value, name)
