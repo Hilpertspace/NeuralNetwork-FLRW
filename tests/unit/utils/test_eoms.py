@@ -33,10 +33,17 @@ def inputs() -> dict:
         "zero": tf.constant([[1, 0.68, 1]], dtype=tf.float64),
     }
 
+    eoml1 = {
+        "valid-range-1": tf.constant([[1, 0.66, 2]], dtype=tf.float64),
+        "valid-range-2": tf.constant([[1, 4, 5]], dtype=tf.float64),
+        "valid-range-3": tf.constant([[4, 10, 9]], dtype=tf.float64),
+    }
+
     return {
         "eom_struts": eom_struts,
         "arg1": arg1,
         "arg2": arg2,
+        "eoml1": eoml1,
     }
 
 @pytest.fixture(scope="module")
@@ -88,10 +95,29 @@ def expected_outputs() -> dict:
         "zero": tf.constant(0, dtype=tf.float64),
     }
 
+    eoml1 = {
+        "5-cell": {
+            "valid-range-1": tf.constant(2.749628781575549e-05, dtype=tf.float64),
+            "valid-range-2": tf.constant(-0.0002916205320655976, dtype=tf.float64),
+            "valid-range-3": tf.constant(-0.004276022026814488, dtype=tf.float64),
+        },
+        "16-cell": {
+            "valid-range-1": tf.constant(8.798812101041757e-05, dtype=tf.float64),
+            "valid-range-2": tf.constant(-0.0009331857026099122, dtype=tf.float64),
+            "valid-range-3": tf.constant(-0.013683270485806361, dtype=tf.float64),
+        },
+        "600-cell": {
+            "valid-range-1": tf.constant(0.003299554537890659, dtype=tf.float64),
+            "valid-range-2": tf.constant(-0.03499446384787171, dtype=tf.float64),
+            "valid-range-3": tf.constant(-0.5131226432177386, dtype=tf.float64),
+        },
+    }
+
     return {
         "eom_struts": eom_struts,
         "arg1": arg1,
         "arg2": arg2,
+        "eoml1": eoml1,
     }
 
 @pytest.fixture(scope="module")
@@ -215,9 +241,31 @@ def test_arg2(case: str, inputs: dict, expected_outputs: dict) -> None:
     else:
         assert arg2(argument) == expected_output
 
+@pytest.mark.parametrize(
+    ("case", "triangulation"),
+    [
+        ("valid-range-1", "5-cell"),
+        ("valid-range-2", "5-cell"),
+        ("valid-range-3", "5-cell"),
+        ("valid-range-1", "16-cell"),
+        ("valid-range-2", "16-cell"),
+        ("valid-range-3", "16-cell"),
+        ("valid-range-1", "600-cell"),
+        ("valid-range-2", "600-cell"),
+        ("valid-range-3", "600-cell"),
+    ]
+)
+def test_eoml1(case: str, triangulation: str, inputs: dict, expected_outputs: dict, model_params: dict[str, Model]) -> None:
+    function_name = "eoml1"
+    argument = inputs[function_name][case]
+    expected_output = expected_outputs[function_name][triangulation][case]
 
-def test_eoml1() -> None:
-    assert False
+    tf.debugging.assert_near(
+        eoml1(argument, model_params[triangulation]),
+        expected_output,
+        rtol=1e-9,
+        atol=1e-13
+    )
 
 
 def test_eoml_acoses() -> None:
