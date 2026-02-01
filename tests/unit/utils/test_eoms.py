@@ -26,9 +26,17 @@ def inputs() -> dict:
         "valid-range": tf.constant([[1, 0.68, 2]], dtype=tf.float64),
     }
 
+    arg2 = {
+        "valid-range-1": tf.constant([[1, 0.66, 2]], dtype=tf.float64),
+        "valid-range-2": tf.constant([[1, 4, 5]], dtype=tf.float64),
+        "valid-range-3": tf.constant([[4, 10, 9]], dtype=tf.float64),
+        "zero": tf.constant([[1, 0.68, 1]], dtype=tf.float64),
+    }
+
     return {
         "eom_struts": eom_struts,
         "arg1": arg1,
+        "arg2": arg2,
     }
 
 @pytest.fixture(scope="module")
@@ -73,9 +81,17 @@ def expected_outputs() -> dict:
         "valid-range": tf.constant(-0.09710743801652864, dtype=tf.float64),
     }
 
+    arg2 = {
+        "valid-range-1": tf.constant(0.6383036514852064, dtype=tf.float64),
+        "valid-range-2": tf.constant(0.25, dtype=tf.float64),
+        "valid-range-3": tf.constant(0.10660035817780521, dtype=tf.float64),
+        "zero": tf.constant(0, dtype=tf.float64),
+    }
+
     return {
         "eom_struts": eom_struts,
         "arg1": arg1,
+        "arg2": arg2,
     }
 
 @pytest.fixture(scope="module")
@@ -175,9 +191,29 @@ def test_arg1(case: str, inputs: dict, expected_outputs: dict) -> None:
     else:
         assert arg1(argument) == expected_output
 
+@pytest.mark.parametrize(
+    "case",
+    [
+        "valid-range-1",
+        "valid-range-2",
+        "valid-range-3",
+        "zero",
+    ]
+)
+def test_arg2(case: str, inputs: dict, expected_outputs: dict) -> None:
+    function_name = "arg2"
+    argument = inputs[function_name][case]
+    expected_output = expected_outputs[function_name][case]
 
-def test_arg2() -> None:
-    assert False
+    if case == "zero":
+        tf.debugging.assert_near(
+            arg2(argument),
+            expected_output,
+            rtol=1e-9,
+            atol=1e-13
+        )
+    else:
+        assert arg2(argument) == expected_output
 
 
 def test_eoml1() -> None:
