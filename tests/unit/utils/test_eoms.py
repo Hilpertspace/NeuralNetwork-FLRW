@@ -51,6 +51,12 @@ def inputs() -> dict:
         "invalid-range": tf.constant([[4, 0.66, 7, 0.68, 12]], dtype=tf.float64),
     }
 
+    eom_spatial_edges = {
+        "valid-range-1": tf.constant([[1, 0.66, 2, 0.68, 3]], dtype=tf.float64),
+        "valid-range-2": tf.constant([[4, 10, 7, 20, 12]], dtype=tf.float64),
+        "invalid-range": tf.constant([[4, 0.66, 7, 0.68, 12]], dtype=tf.float64),
+    }
+
     return {
         "eom_struts": eom_struts,
         "arg1": arg1,
@@ -58,6 +64,7 @@ def inputs() -> dict:
         "eoml1": eoml1,
         "eoml_acoses": eoml_acoses,
         "eoml2": eoml2,
+        "eom_spatial_edges": eom_spatial_edges,
     }
 
 @pytest.fixture(scope="module")
@@ -163,6 +170,24 @@ def expected_outputs() -> dict:
         },
     }
 
+    eom_spatial_edges = {
+        "5-cell": {
+            "valid-range-1": tf.constant(296.0873672265283, dtype=tf.float64),
+            "valid-range-2": tf.constant(151388.26933912872, dtype=tf.float64),
+            "invalid-range": tf.constant(float("nan"), dtype=tf.float64),
+        },
+        "16-cell": {
+            "valid-range-1": tf.constant(67.88563252592917, dtype=tf.float64),
+            "valid-range-2": tf.constant(238897.19998968765, dtype=tf.float64),
+            "invalid-range": tf.constant(float("nan"), dtype=tf.float64),
+        },
+        "600-cell": {
+            "valid-range-1": tf.constant(554371.3954298887, dtype=tf.float64),
+            "valid-range-2": tf.constant(1721454.1455350781, dtype=tf.float64),
+            "invalid-range": tf.constant(float("nan"), dtype=tf.float64),
+        },
+    }
+
     return {
         "eom_struts": eom_struts,
         "arg1": arg1,
@@ -170,6 +195,7 @@ def expected_outputs() -> dict:
         "eoml1": eoml1,
         "eoml_acoses": eoml_acoses,
         "eoml2": eoml2,
+        "eom_spatial_edges": eom_spatial_edges,
     }
 
 @pytest.fixture(scope="module")
@@ -377,6 +403,31 @@ def test_eoml2(case: str, triangulation: str, inputs: dict, expected_outputs: di
             atol=1e-13
         )
 
+@pytest.mark.parametrize(
+    ("case", "triangulation"),
+    [
+        ("valid-range-1", "5-cell"),
+        ("valid-range-2", "5-cell"),
+        ("invalid-range", "5-cell"),
+        ("valid-range-1", "16-cell"),
+        ("valid-range-2", "16-cell"),
+        ("invalid-range", "16-cell"),
+        ("valid-range-1", "600-cell"),
+        ("valid-range-2", "600-cell"),
+        ("invalid-range", "600-cell"),
+    ]
+)
+def test_eom_spatial_edges(case: str, triangulation: str, inputs: dict, expected_outputs: dict, model_params: dict[str, Model]) -> None:
+    function_name = "eom_spatial_edges"
+    argument = inputs[function_name][case]
+    expected_output = expected_outputs[function_name][triangulation][case]
 
-def test_eom_spatial_edges() -> None:
-    assert False
+    if case == "invalid-range":
+        assert tf.math.is_nan(expected_output.numpy())
+    else:
+        tf.debugging.assert_near(
+            eom_spatial_edges(argument, model_params[triangulation]),
+            expected_output,
+            rtol=1e-9,
+            atol=1e-13
+        )
