@@ -39,11 +39,18 @@ def inputs() -> dict:
         "valid-range-3": tf.constant([[4, 10, 9]], dtype=tf.float64),
     }
 
+    eoml_acoses = {
+        "valid-range-1": tf.constant([[1, 0.66, 2, 0.68, 3]], dtype=tf.float64),
+        "valid-range-2": tf.constant([[4, 10, 7, 20, 12]], dtype=tf.float64),
+        "invalid-range": tf.constant([[4, 0.66, 7, 0.68, 12]], dtype=tf.float64),
+    }
+
     return {
         "eom_struts": eom_struts,
         "arg1": arg1,
         "arg2": arg2,
         "eoml1": eoml1,
+        "eoml_acoses": eoml_acoses,
     }
 
 @pytest.fixture(scope="module")
@@ -113,11 +120,30 @@ def expected_outputs() -> dict:
         },
     }
 
+    eoml_acoses = {
+        "5-cell": {
+            "valid-range-1": tf.constant(3.048336250825299, dtype=tf.float64),
+            "valid-range-2": tf.constant(1.2879925553849074, dtype=tf.float64),
+            "invalid-range": tf.constant(float("nan"), dtype=tf.float64),
+        },
+        "16-cell": {
+            "valid-range-1": tf.constant(9.754676002640958, dtype=tf.float64),
+            "valid-range-2": tf.constant(4.121576177231704, dtype=tf.float64),
+            "invalid-range": tf.constant(float("nan"), dtype=tf.float64),
+        },
+        "600-cell": {
+            "valid-range-1": tf.constant(365.80035009903594, dtype=tf.float64),
+            "valid-range-2": tf.constant(154.55910664618892, dtype=tf.float64),
+            "invalid-range": tf.constant(float("nan"), dtype=tf.float64),
+        },
+    }
+
     return {
         "eom_struts": eom_struts,
         "arg1": arg1,
         "arg2": arg2,
         "eoml1": eoml1,
+        "eoml_acoses": eoml_acoses,
     }
 
 @pytest.fixture(scope="module")
@@ -267,9 +293,34 @@ def test_eoml1(case: str, triangulation: str, inputs: dict, expected_outputs: di
         atol=1e-13
     )
 
+@pytest.mark.parametrize(
+    ("case", "triangulation"),
+    [
+        ("valid-range-1", "5-cell"),
+        ("valid-range-2", "5-cell"),
+        ("invalid-range", "5-cell"),
+        ("valid-range-1", "16-cell"),
+        ("valid-range-2", "16-cell"),
+        ("invalid-range", "16-cell"),
+        ("valid-range-1", "600-cell"),
+        ("valid-range-2", "600-cell"),
+        ("invalid-range", "600-cell"),
+    ]
+)
+def test_eoml_acoses(case: str, triangulation: str, inputs: dict, expected_outputs: dict, model_params: dict[str, Model]) -> None:
+    function_name = "eoml_acoses"
+    argument = inputs[function_name][case]
+    expected_output = expected_outputs[function_name][triangulation][case]
 
-def test_eoml_acoses() -> None:
-    assert False
+    if case == "invalid-range":
+        assert tf.math.is_nan(expected_output.numpy())
+    else:
+        tf.debugging.assert_near(
+            eoml_acoses(argument, model_params[triangulation]),
+            expected_output,
+            rtol=1e-9,
+            atol=1e-13
+        )
 
 
 def test_eoml2() -> None:
