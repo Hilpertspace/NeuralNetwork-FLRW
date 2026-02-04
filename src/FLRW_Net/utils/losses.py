@@ -36,15 +36,22 @@ def spatial_edge_losses(prediction: tf.Tensor, model_params: Model) -> tf.Tensor
     """Compute the tensor of losses from eom_spatial_edges."""
     num_edges = (tf.shape(prediction)[1] - 3) // 2
 
-    return sliding_slice_losses(
-        prediction=prediction,
-        model_params=model_params,
-        slice_length=5,
-        step=2,
-        start=1,
-        stop=1 + num_edges,
-        loss_fn=eom_spatial_edges, # type: ignore
+    out = tf.cond(
+        tf.equal(num_edges, 0),
+        lambda: tf.constant([[]], tf.float64),
+        lambda: sliding_slice_losses(
+            prediction=prediction,
+            model_params=model_params,
+            slice_length=5,
+            step=2,
+            start=0,
+            stop=1 + num_edges,
+            loss_fn=eom_spatial_edges, # type: ignore
+        )
     )
+    out = tf.ensure_shape(out, (None, None))
+    return out
+
 
 @tf.function
 def strut_losses(prediction: tf.Tensor, model_params: Model) -> tf.Tensor:

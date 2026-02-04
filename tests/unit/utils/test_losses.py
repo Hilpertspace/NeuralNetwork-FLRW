@@ -1,10 +1,10 @@
 import pytest
 import tensorflow as tf
 
-from FLRW_Net.utils.losses import sliding_slice_losses, spatial_edge_losses, strut_losses
-from tests.unit.utils.test_eoms import Model, model_params, eom_spatial_edges, eom_struts
+from FLRW_Net.utils.losses import spatial_edge_losses, strut_losses
+from tests.unit.utils.test_eoms import Model, model_params  # noqa: F401
 
-from unittest.mock import MagicMock
+
 # Test Tensor being of correct format for different dimensions
 # Test values for two cases being of the correct format
 @pytest.fixture(scope="module")
@@ -22,8 +22,27 @@ def inputs() -> dict[str, tf.Tensor]:
         "five_step": five_step,
     }
 
-def dummy_fn(inputs: tf.Tensor, model_params: Model) -> tf.Tensor:
-    return inputs
+@pytest.fixture
+def outputs() -> dict[str, dict[str, tf.Tensor]]:
+    spatial_edge_losses = {
+        "one_step": tf.constant([[]], dtype=tf.float64),
+        "two_step": tf.constant([[1593163.2874693281]], dtype=tf.float64),
+        "three_step": tf.constant([[1593163.2874693281, 893130.7750761096]], dtype=tf.float64),
+        "four_step": tf.constant([[1593163.2874693281, 893130.7750761096, 515742.2686814965]], dtype=tf.float64),
+        "five_step": tf.constant([[1593163.2874693281, 893130.7750761096, 515742.2686814965, 302955.0819667162]], dtype=tf.float64),
+    }
+    strut_losses = {
+        "one_step": tf.constant([[2176.6251730934673]], dtype=tf.float64),
+        "two_step": tf.constant([[2176.6251730934673, 2844.814186933328]], dtype=tf.float64),
+        "three_step": tf.constant([[2176.6251730934673, 2844.814186933328, 2325.1495815007697]], dtype=tf.float64),
+        "four_step": tf.constant([[2176.6251730934673, 2844.814186933328, 2325.1495815007697, 1225.2077493372142]], dtype=tf.float64),
+        "five_step": tf.constant([[2176.6251730934673, 2844.814186933328, 2325.1495815007697, 1225.2077493372142, 257.91447697415725]], dtype=tf.float64),
+    }
+
+    return {
+        "strut_losses": strut_losses,
+        "spatial_edge_losses": spatial_edge_losses,
+    }
 
 @pytest.mark.parametrize(
     ("case", "number_of_timesteps"),
@@ -35,18 +54,24 @@ def dummy_fn(inputs: tf.Tensor, model_params: Model) -> tf.Tensor:
         ("five_step", 5),
     ]
 )
-def test_sliding_slice_losses_3_features(case: str, number_of_timesteps: int, inputs: dict[str, tf.Tensor], model_params: dict[str, Model]) -> None:
-    output = sliding_slice_losses(
-        prediction=inputs[case],
-        model_params=model_params["5-cell"],
-        slice_length=3,
-        step=2,
-        start=0,
-        stop=number_of_timesteps,
-        loss_fn=eom_struts,
-    )
-
+def test_strut_losses(
+    case: str,
+    number_of_timesteps: int,
+    inputs: dict[str, tf.Tensor],
+    outputs: dict[str, dict[str, tf.Tensor]],
+    model_params: dict[str, Model],  # noqa: F811
+) -> None:
+    function_name = "strut_losses"
+    output = strut_losses(prediction=inputs[case], model_params=model_params["16-cell"])
     assert tf.shape(output)[1] == number_of_timesteps
+
+    if case != "one_step":
+        tf.debugging.assert_near(
+        output,
+        outputs[function_name][case],
+        rtol=1e-6,
+        atol=1e-8,
+    )
 
 @pytest.mark.parametrize(
     ("case", "number_of_spatial_edges"),
@@ -58,25 +83,16 @@ def test_sliding_slice_losses_3_features(case: str, number_of_timesteps: int, in
         ("five_step", 4),
     ]
 )
-def test_sliding_slice_losses_5_features(case: str, number_of_spatial_edges: int, inputs: dict[str, tf.Tensor], model_params: dict[str, Model]) -> None:
-    if case == "one_step":
-        # This should not occur and be jumped over
-        pass
-    output = sliding_slice_losses(
-        prediction=inputs[case],
-        model_params=model_params["16-cell"],
-        slice_length=5,
-        step=2,
-        start=1,
-        stop=1+number_of_spatial_edges,
-        loss_fn=eom_spatial_edges,
-    )
-
+def test_spatial_edge_losses(
+    case: str,
+    number_of_spatial_edges: int,
+    inputs: dict[str, tf.Tensor],
+    outputs: dict[str, dict[str, tf.Tensor]],
+    model_params: dict[str, Model],  # noqa: F811
+) -> None:
+    function_name = "spatial_edge_losses"
+    output = spatial_edge_losses(inputs[case], model_params["600-cell"])
     assert tf.shape(output)[1].numpy() == number_of_spatial_edges
 
-def test_spatial_edge_losses() -> None:
-    assert False
-
-
-def test_strut_losses() -> None:
-    assert False
+    if case != "one_step":
+        tf.debugging.assert_equal(output, outputs[function_name][case])
