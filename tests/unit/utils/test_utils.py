@@ -1,7 +1,7 @@
 import pytest
 import tensorflow as tf
 
-from FLRW_Net.utils.utils import assert_non_negative, crop, get_triangulation_params, set_slice_specs, Triangulation
+from FLRW_Net.utils.utils import Triangulation, assert_non_negative, crop, get_triangulation_params, set_slice_specs
 
 
 @pytest.fixture(scope="module")
