@@ -30,9 +30,14 @@ class SpatialEdgeActivation(tf.keras.layers.Layer):
         num_features = tf.shape(inputs)[1]
 
         # Indices of every second feature (2, 4, 6, ...)
-        indices = tf.range(2, num_features-2, 2)
+        # tf.cond needed as a trick for graph execution
+        indices = tf.cond(
+            num_features <= 3,  # noqa: PLR2004
+            lambda: tf.constant([2], dtype=tf.int32),
+            lambda: tf.range(2, num_features-2, 2)
+        )
 
-        # Compute start and end indices for 3-feature slices
+        # Compute start and end indices for 5-feature slices
         start_indices = indices - 2
         end_indices = indices + 3
 

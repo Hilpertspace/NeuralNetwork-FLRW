@@ -70,6 +70,10 @@ class Matmul(tf.keras.layers.Layer):
         self._slice_specs = sort_slice_specs(set_slice_specs(number_of_timesteps))
         self.slice_layers = [SingleSliceMatmul(start, end) for start, end in self._slice_specs]
 
+        # Register layers as attributes for tracking with Keras
+        for i, layer in enumerate(self.slice_layers):
+            setattr(self, f"slice_layer_{i}", layer)
+
     @tf.function
     def call(self, inputs: tf.Tensor) -> tf.Tensor:
         """Apply matrix multiplication to the inputs."""

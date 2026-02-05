@@ -63,11 +63,10 @@ class NeuralNetwork(tf.keras.Model):
         """Define a single step of training."""
         with tf.GradientTape(persistent=True) as tape:
             prediction = self(inputs, training=True)
-
             loss_struts = strut_losses(prediction, self.model_params)
             loss_spatial_edges = spatial_edge_losses(prediction, self.model_params)
             combined = tf.concat([loss_struts, loss_spatial_edges], axis=1)
-            loss = tf.reduce_mean(combined, axis=1)
+            loss = tf.squeeze(tf.reduce_mean(combined, axis=1))
 
         # Tell tensorflows automatic gradient computation to compute the gradients
         # of the loss with respect to the trainable variables of the network.
