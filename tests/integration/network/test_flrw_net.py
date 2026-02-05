@@ -1,7 +1,7 @@
 import pytest
 import tensorflow as tf
 
-from FLRW_Net.networks.test import GeneralizedModel
+from FLRW_Net.networks.network import GeneralizedModel
 
 
 @pytest.fixture(scope="module")
@@ -34,3 +34,46 @@ def test_generalized_network(setup_network_test: dict) -> None:
 
     tf.debugging.assert_near(output_3, expected_output_3, atol=1e-8, rtol=1e-8)
     tf.debugging.assert_near(output_2, expected_output_2, atol=1e-8, rtol=1e-8) # TODO: Check whether the computation matches the previous accuracy  # noqa: E501
+
+
+def test_init() -> None:
+    assert False
+
+
+def test_first_layer() -> None:
+    assert False
+
+
+def test_first_two_layers() -> None:
+    assert False
+
+
+def test_first_three_layers() -> None:
+    assert False
+
+
+def test_first_four_layers() -> None:
+    assert False
+
+
+def test_first_five_layers() -> None:
+    assert False
+
+
+# One iteration
+# Two iterations
+# Three iterations
+def test_all_layers() -> None:
+    assert False
+
+
+# One timestep
+# Two timesteps
+# Three timesteps
+# Four timesteps
+def test_training_results() -> None:
+    assert False
+
+
+# Test error handling on input data
+# Test generalizazion: training 1-10 timesteps

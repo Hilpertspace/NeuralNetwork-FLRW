@@ -1,5 +1,6 @@
 """Utility functions for FLRW-Net."""
 
+from collections import defaultdict
 from typing import NamedTuple
 
 import tensorflow as tf
@@ -93,6 +94,19 @@ def set_slice_specs(n: int) -> list[tuple[int, int]]:
     specs.append((length+1, length+2))
 
     return specs
+
+def sort_slice_specs(tuples: list[tuple]) -> list[tuple[int, int]]:
+    """Sort tuples by their first element."""
+    groups = defaultdict(list)
+    for start, end in tuples:
+        groups[start].append((start, end))
+    result = []
+
+    for tuple_list in groups.values():
+        for start, end in tuple_list:
+            result.append((start, end))
+
+    return result
 
 def assert_non_negative(value: tf.Tensor, name: str) -> None:
     """Ensure that the given argument is non-negative."""

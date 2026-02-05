@@ -1,7 +1,7 @@
 """Layer for matrix multiplication."""
 import tensorflow as tf
 
-from FLRW_Net.utils.utils import set_slice_specs
+from FLRW_Net.utils.utils import set_slice_specs, sort_slice_specs
 
 
 class SingleSliceMatmul(tf.keras.layers.Layer):
@@ -67,7 +67,7 @@ class Matmul(tf.keras.layers.Layer):
     def __init__(self, number_of_timesteps: int) -> None:
         """Initialize the layer."""
         super().__init__()
-        self._slice_specs = set_slice_specs(number_of_timesteps)
+        self._slice_specs = sort_slice_specs(set_slice_specs(number_of_timesteps))
         self.slice_layers = [SingleSliceMatmul(start, end) for start, end in self._slice_specs]
 
     @tf.function

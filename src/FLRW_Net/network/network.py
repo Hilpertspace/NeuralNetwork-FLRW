@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from FLRW_Net.utils.utils import Model
 
 
-class GeneralizedModel(tf.keras.Model):
+class NeuralNetwork(tf.keras.Model):
     """Minimum example for a generalized model."""
 
     def __init__(self, number_of_timesteps: int, triangulation: str, cosmological_constant: float) -> None:
@@ -34,6 +34,7 @@ class GeneralizedModel(tf.keras.Model):
         self.spatial_edge_activation.trainable = False
         self.assembly.trainable = False
 
+        self.number_of_timesteps = tf.constant(number_of_timesteps, dtype=tf.int32)
         self.model_params: Model = set_model_params(triangulation, cosmological_constant)
         self.loss_threshold = 1e-5
 
@@ -45,7 +46,11 @@ class GeneralizedModel(tf.keras.Model):
         outputs_3 = self.strut_activation_layer(outputs_2)
 
         # Compute the spatial edge activation with the values from output_2 and the struts from outputs_3
-        outputs_4 = self.spatial_edge_activation(outputs_3)
+        outputs_4 = tf.cond(
+            self.number_of_timesteps >= 2,  # noqa: PLR2004
+            lambda: self.spatial_edge_activation(outputs_3),
+            lambda: outputs_3
+        )
 
         # Use the outputs_2 scaled_as and the updated spatial edges from outputs_4 to update the strut values
         outputs_5 = self.assembly(outputs_2, outputs_4)
