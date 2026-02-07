@@ -29,7 +29,7 @@ class PartialReLU(tf.keras.layers.Layer):
             first = tf.cast(inputs[:, 0:1], tf.float64)
             last = tf.cast(inputs[:, -1:], tf.float64)
 
-            middle = tf.nn.relu(inputs[:, 1:-1])
+            middle = tf.nn.relu(inputs[:, 1:-1]) + tf.constant(10**-14, dtype=tf.float64)
             return tf.concat([first, middle, last], axis=1)
 
         return tf.cond(n <= self._minimum_length, too_short, relu_middle)

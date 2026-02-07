@@ -36,7 +36,7 @@ class NeuralNetwork(tf.keras.Model):
 
         self.number_of_timesteps = tf.constant(number_of_timesteps, dtype=tf.int32)
         self.model_params: Model = set_model_params(triangulation, cosmological_constant)
-        self.loss_threshold = 1e-5
+        self.loss_threshold = 1e-30
 
     @tf.function
     def call(self, inputs: tf.Tensor) -> tf.Tensor:
@@ -85,17 +85,18 @@ class NeuralNetwork(tf.keras.Model):
         minimum_loss = tf.Variable(tf.float32.max, trainable=False)
         loss_history = []
         best_weights = [tf.Variable(w, trainable=False) for w in self.trainable_variables]
+        loss_value = float(tf.float32.max)
 
         for _ in tqdm(range(epochs), desc="Training", unit="step", ncols=70):
-            loss = self._custom_train_step(inputs)
-            loss_value = float(loss)
-            loss_history.append(loss_value)
-
             # Update best weights
             if loss_value < float(minimum_loss):
                 minimum_loss.assign(loss_value)
                 for bw, w in zip(best_weights, self.trainable_variables):
                     bw.assign(w)
+
+            loss = self._custom_train_step(inputs)
+            loss_value = float(loss)
+            loss_history.append(loss_value)
 
             # Early stopping
             if loss_value < self.loss_threshold:
