@@ -1,79 +1,54 @@
 import pytest
 import tensorflow as tf
 
-from FLRW_Net.networks.network import GeneralizedModel
+from FLRW_Net.network.network import NeuralNetwork
 
 
 @pytest.fixture(scope="module")
 def setup_network_test() -> dict:
-    inputs_3 = tf.constant([[1, 0.5, 2, 0.5, 3, 0.6, 4]], dtype=tf.float64)
-    inputs_2 = tf.constant([[1, 0.5, 3.5, 0.5, 4]], dtype=tf.float64)
-
-    expected_output_3 = tf.constant([[1, 0.8017837257372732, 1.85714286, 0.89429723, 2.81318681, 1.17188412, 4]], dtype=tf.float64)
-    expected_output_2 = tf.constant([[1, 1.20267559, 2.28571429, 1.60356745, 4]], dtype=tf.float64)
-
-    return {
-        "inputs_2": inputs_2,
-        "inputs_3": inputs_3,
-        "expected_output_3": expected_output_3,
-        "expected_output_2": expected_output_2,
+    inputs = {
+        "one": tf.constant([[1, 0.67, 2]], dtype=tf.float64),
+        "two": tf.constant([[1, 0.67, 2, 0.68, 3]], dtype=tf.float64),
+        "three": tf.constant([[1, 0.67, 2, 0.68, 3, 0.69, 4]], dtype=tf.float64),
+        "four": tf.constant([[1, 0.67, 2, 0.68, 3, 0.69, 4, 0.7, 5]], dtype=tf.float64),
     }
 
-def test_generalized_network(setup_network_test: dict) -> None:
+    outputs = {
+        "one": tf.constant([[1, 1.0222524150130485, 2]], dtype=tf.float64),
+        "two": tf.constant([[1, 0.7301968541896805, 1.7143019116079661, 1.3205815579100626, 3]], dtype=tf.float64),
+        "three": tf.constant([[1, 0.730196854189684, 1.7143019116079696, 1.0202100885913643, 2.7075629130231627, 1.3337800453372162, 4]], dtype=tf.float64),
+        "four": tf.constant([[1, 0.730196854189684, 1.7143019116079696, 1.0202100885913674, 2.7075629130231658, 1.0251638043738571, 3.7009498853586638, 1.3468838258646922, 5]], dtype=tf.float64),
+    }
+
+    cosmological_constant = 1e-3
+    triangulation = "5-cell"
+
+    return {
+        "inputs": inputs,
+        "outputs": outputs,
+        "cosmological_constant": cosmological_constant,
+        "triangulation": triangulation,
+    }
+
+
+@pytest.mark.parametrize(
+    ("number_of_timesteps", "string_name"),
+    [
+        (1, "one"),
+        (2, "two"),
+        (3, "three"),
+        (4, "four"),
+    ]
+)
+def test_forward_feeding(number_of_timesteps: int, string_name: str, setup_network_test: dict) -> None:
     tf.keras.backend.set_floatx("float64")
-    inputs_3 = setup_network_test["inputs_3"]
-    inputs_2 = setup_network_test["inputs_2"]
-    expected_output_3 = setup_network_test["expected_output_3"]
-    expected_output_2 = setup_network_test["expected_output_2"]
+    flrw_net = NeuralNetwork(
+        number_of_timesteps=number_of_timesteps,
+        triangulation=setup_network_test["triangulation"],
+        cosmological_constant=setup_network_test["cosmological_constant"]
+    )
 
-    model_3 = GeneralizedModel(number_of_timesteps=3)
-    output_3 = model_3(inputs_3)
-
-    model_2 = GeneralizedModel(number_of_timesteps=2)
-    output_2 = model_2(inputs_2)
-
-    tf.debugging.assert_near(output_3, expected_output_3, atol=1e-8, rtol=1e-8)
-    tf.debugging.assert_near(output_2, expected_output_2, atol=1e-8, rtol=1e-8) # TODO: Check whether the computation matches the previous accuracy  # noqa: E501
-
-
-def test_init() -> None:
-    assert False
-
-
-def test_first_layer() -> None:
-    assert False
-
-
-def test_first_two_layers() -> None:
-    assert False
-
-
-def test_first_three_layers() -> None:
-    assert False
-
-
-def test_first_four_layers() -> None:
-    assert False
-
-
-def test_first_five_layers() -> None:
-    assert False
-
-
-# One iteration
-# Two iterations
-# Three iterations
-def test_all_layers() -> None:
-    assert False
-
-
-# One timestep
-# Two timesteps
-# Three timesteps
-# Four timesteps
-def test_training_results() -> None:
-    assert False
-
-
-# Test error handling on input data
-# Test generalizazion: training 1-10 timesteps
+    tf.debugging.assert_equal(
+        flrw_net(setup_network_test["inputs"][string_name]),
+        setup_network_test["outputs"][string_name],
+    )

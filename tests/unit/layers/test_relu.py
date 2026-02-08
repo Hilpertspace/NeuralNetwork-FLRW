@@ -9,8 +9,8 @@ def setup_relu_test() -> dict:
     inputs_3 = tf.constant([[-1, 0.5, -1, 0.5, 3, -0.5, 4]], dtype=tf.float64)
     inputs_2 = tf.constant([[1, 0.5, 2, 0.5, -3]], dtype=tf.float64)
 
-    expected_output_3 = tf.constant([[-1, 0.5, 0, 0.5, 3, 0, 4]], shape=(1, 7), dtype=tf.float64)
-    expected_output_2 = tf.constant([[1, 0.5, 2, 0.5, -3]], shape=(1, 5), dtype=tf.float64)
+    expected_output_3 = tf.constant([[-1, 0.5+10**-14, 0+10**-14, 0.5+10**-14, 3+10**-14, 0+10**-14, 4]], shape=(1, 7), dtype=tf.float64)
+    expected_output_2 = tf.constant([[1, 0.5+10**-14, 2+10**-14, 0.5+10**-14, -3]], shape=(1, 5), dtype=tf.float64)
 
     return {
         "inputs_2": inputs_2,

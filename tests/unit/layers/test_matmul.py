@@ -5,7 +5,7 @@ from FLRW_Net.layers.matmul import SingleSliceMatmul
 
 
 @pytest.fixture(scope="module")
-def setup_matmul_test() -> dict:
+def setup_single_slice_matmul_test() -> dict:
     inputs = tf.constant([[1, -0.5, -2, 0.5, -3]], dtype=tf.float64)
 
     expected_output_1 = tf.constant([[1]], dtype=tf.float64)
@@ -19,12 +19,12 @@ def setup_matmul_test() -> dict:
         "expected_output_5": expected_output_5,
     }
 
-def test_matmul_layer(setup_matmul_test: dict) -> None:
+def test_single_slice_matmul(setup_single_slice_matmul_test: dict) -> None:
     tf.keras.backend.set_floatx("float64")
-    inputs = setup_matmul_test["inputs"]
-    expected_output_1 = setup_matmul_test["expected_output_1"]
-    expected_output_3 = setup_matmul_test["expected_output_3"]
-    expected_output_5 = setup_matmul_test["expected_output_5"]
+    inputs = setup_single_slice_matmul_test["inputs"]
+    expected_output_1 = setup_single_slice_matmul_test["expected_output_1"]
+    expected_output_3 = setup_single_slice_matmul_test["expected_output_3"]
+    expected_output_5 = setup_single_slice_matmul_test["expected_output_5"]
 
     model_1 = SingleSliceMatmul(0, 1)
     output_1 = model_1(inputs)
